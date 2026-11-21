@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { NUTRIENTS } from '@/data/nutrients'
 import type { Organ } from '@/data/types'
 import { EvidenceBadge } from '@/components/ui/EvidenceBadge'

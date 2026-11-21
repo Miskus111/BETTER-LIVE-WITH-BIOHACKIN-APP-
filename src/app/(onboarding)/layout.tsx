@@ -1,5 +1,5 @@
 import { IntlProvider } from '@/components/providers/IntlProvider'
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { Logo } from '@/components/layout/Logo'
 import { LanguageSwitch } from '@/components/app/LanguageSwitch'
 

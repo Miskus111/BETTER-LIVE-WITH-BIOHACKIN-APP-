@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { getTranslations } from 'next-intl/server'
 import { DatabaseZap } from 'lucide-react'
 

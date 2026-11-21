@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState, useTransition } from 'react'
 import { AlertOctagon, CheckCircle2, Phone, Stethoscope } from 'lucide-react'

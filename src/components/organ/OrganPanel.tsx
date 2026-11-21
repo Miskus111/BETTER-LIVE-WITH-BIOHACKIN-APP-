@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, ExternalLink, X } from 'lucide-react'
 import { SYSTEMS } from '@/data/sources'

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { HeartPulse, Play } from 'lucide-react'
 import { requireAppUser } from '@/lib/auth'

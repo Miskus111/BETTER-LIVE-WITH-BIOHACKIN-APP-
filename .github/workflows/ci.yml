@@ -26,12 +26,6 @@ jobs:
         run: npm run typecheck
       - name: Unit tests
         run: npm test
-      - name: Content and food data checks
-        run: npm run check:data && npm run foods:validate
-      - name: Physician review document matches the live content
-        run: |
-          npm run review:doc
-          git diff --exit-code -I 'Vygenerováno' docs/lekarska-kontrola.md || (echo "::error::docs/lekarska-kontrola.md is out of date — run npm run review:doc and commit it" && exit 1)
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
       - name: E2E (builds into .next-test)

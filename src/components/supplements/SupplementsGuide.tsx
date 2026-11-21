@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { AlertTriangle, Salad } from 'lucide-react'
 import { NUTRIENTS } from '@/data/nutrients'
 import { REF_SRC, REFERENCE } from '@/data/reference'

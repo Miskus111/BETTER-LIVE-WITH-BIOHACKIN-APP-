@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import type { Food } from '@/data/types'
 import { MEASURES, measureOf, portionText } from '@/lib/foods/query'
 import { fmtAmount, pctRef } from '@/lib/nutrition'

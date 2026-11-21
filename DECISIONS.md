@@ -2,6 +2,17 @@
 
 Short, dated records of choices made while building. Newest first within each phase.
 
+
+## 2026-11-21 — Web a aplikace jako dva projekty
+
+- **Rozhodnutí:** veřejný vzdělávací web zůstává v `BETTER-LIVE-WEB-`, aplikace (přihlášení, osobní data, AI kouč)
+  je v `BETTER-LIVE-WITH-BIOHACKIN-APP-`, každý s vlastním nasazením na Vercelu.
+- **Proč:** web byl pomalý, protože každá stránka se renderovala zvlášť v USA (jazyková cookie v kořenovém layoutu,
+  proxy se Supabase na každém požadavku, region iad1). Web bez aplikace je čistě statický a jde z CDN; aplikace běží
+  ve Stockholmu vedle databáze. Změna webu nenasazuje aplikaci a naopak.
+- **Sdílení:** data (`src/data`) se tvoří ve webu a do aplikace se kopírují `npm run sync:data`. Odkazy mezi projekty
+  řeší přesměrování v `next.config.ts` a v aplikaci komponenta `@/components/ui/Link`.
+
 ## Phase 1 — scaffold, rename, i18n, auth, onboarding, schema (2026-11-16)
 
 - **Built on the existing FLX app, not a fresh repo.** Anatomy, nutrient, food, absorption and looksmaxing modules

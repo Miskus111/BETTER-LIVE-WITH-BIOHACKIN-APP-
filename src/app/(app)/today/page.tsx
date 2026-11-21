@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { getTranslations } from 'next-intl/server'
 import { Activity, Apple, Bed, Bot, Dumbbell, FlaskConical, Gauge, Pill, Scale } from 'lucide-react'
 import { requireAppUser } from '@/lib/auth'

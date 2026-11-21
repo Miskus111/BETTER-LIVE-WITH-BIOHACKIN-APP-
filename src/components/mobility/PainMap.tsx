@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { useTranslations } from 'next-intl'
 import { BODY_PATH } from '@/components/anatomy/geometry'
 import type { Region } from '@/lib/pain/red-flags'

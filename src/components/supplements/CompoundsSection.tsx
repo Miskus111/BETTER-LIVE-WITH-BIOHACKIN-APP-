@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { ArrowRight } from 'lucide-react'
 import { COMPOUNDS, GOALS, type CompoundGoal } from '@/data/compounds'
 import type { Evidence } from '@/data/types'

@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { usePathname } from 'next/navigation'
 import { ORGAN_BY_ID } from '@/data/organs'
 import type { OrganId } from '@/data/types'

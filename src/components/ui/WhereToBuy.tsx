@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { ArrowUpRight, Info, Store } from 'lucide-react'
 import { AFFILIATE_DISCLOSURE, affiliateUrl } from '@/data/affiliate'
 import { RETAILERS, type ShopLink } from '@/data/retailers'

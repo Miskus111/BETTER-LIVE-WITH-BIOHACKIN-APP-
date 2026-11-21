@@ -3,6 +3,23 @@ import createNextIntlPlugin from 'next-intl/plugin'
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
+const WEB_URL = (process.env.NEXT_PUBLIC_WEB_URL ?? 'https://better-live-web.vercel.app').replace(/\/$/, '')
+const PUBLIC_PATHS = [
+  '/food/:path*',
+  '/organ/:path*',
+  '/jak-funguje-telo/:path*',
+  '/doplnky/:path*',
+  '/looksmaxing',
+  '/science',
+  '/nastroje',
+  '/privacy',
+  '/terms',
+  '/pricing',
+  '/jak-doporucujeme',
+  '/shop',
+  '/our-standard',
+]
+
 /**
  * Where the site may load from and talk to: itself, Supabase (data, auth, photos) and Open Food Facts
  * (barcode lookup). Inline scripts stay allowed — Next's streamed payload is inline and a nonce would
@@ -29,27 +46,10 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: { '/api/coach': ['./system-prompt.md'] },
   // separate build folder for Playwright so tests don't clobber a running `npm run dev`
   distDir: process.env.NEXT_DIST_DIR || '.next',
-  // the store was removed (v0.3) — keep old links working
+  // Public pages live on the website (separate project). Links to them from shared data and components
+  // (guides, foods, organs, legal pages) are sent there, so nothing has to be rewritten in the shared code.
   async redirects() {
-    return [
-      { source: '/shop', destination: '/doplnky', permanent: true },
-      { source: '/product/:id', destination: '/doplnky', permanent: true },
-      { source: '/cart', destination: '/', permanent: true },
-      { source: '/checkout', destination: '/', permanent: true },
-      { source: '/our-standard', destination: '/jak-doporucujeme', permanent: true },
-      { source: '/signup', destination: '/login?mode=signup', permanent: false },
-      { source: '/register', destination: '/login?mode=signup', permanent: false },
-      // renamed food ids (see FOOD_ID_ALIASES in src/data/foods.ts)
-      { source: '/food/seaweed-nori', destination: '/food/spirulina', permanent: true },
-      { source: '/food/yeast-nutritional', destination: '/food/yeast-dry', permanent: true },
-      { source: '/food/olomouc-cheese', destination: '/food/limburger', permanent: true },
-      { source: '/food/halloumi', destination: '/food/goat-cheese-hard', permanent: true },
-      { source: '/food/cod-liver-canned', destination: '/food/cod-canned', permanent: true },
-      { source: '/food/parsley-root', destination: '/food/parsley', permanent: true },
-      { source: '/food/rice-basmati-cooked', destination: '/food/rice-parboiled-cooked', permanent: true },
-      { source: '/food/coffee-latte', destination: '/food/coffee-decaf', permanent: true },
-      { source: '/food/banana-chips', destination: '/food/banana-dried', permanent: true },
-    ]
+    return PUBLIC_PATHS.map((source) => ({ source, destination: `${WEB_URL}${source}`, permanent: false }))
   },
   // metadata (title, description, og:image) always in <head> — every link-preview bot finds it
   htmlLimitedBots: /.*/,

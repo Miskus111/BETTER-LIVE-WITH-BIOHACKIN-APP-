@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Check } from 'lucide-react'

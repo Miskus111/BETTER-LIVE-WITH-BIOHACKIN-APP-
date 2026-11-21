@@ -1,6 +1,6 @@
 'use client'
 
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { BookOpen } from 'lucide-react'
 import { GLOSSARY_BY_ID } from '@/data/glossary'

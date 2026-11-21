@@ -1,5 +1,5 @@
 {
-  "name": "better-live-biohacking",
+  "name": "blwb-app",
   "version": "0.5.0",
   "private": true,
   "scripts": {
@@ -7,25 +7,18 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "check:data": "tsx --tsconfig scripts/tsconfig.json scripts/check-data.ts",
-    "gen:placeholders": "tsx --tsconfig scripts/tsconfig.json scripts/gen-placeholders.tsx",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
-    "images:todo": "tsx --tsconfig scripts/tsconfig.json scripts/images-todo.ts",
-    "check:links": "tsx --tsconfig scripts/tsconfig.json scripts/check-links.ts",
     "gen:seed": "tsx --tsconfig scripts/tsconfig.json scripts/gen-seed.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "seed:demo": "tsx --tsconfig scripts/tsconfig.json scripts/seed-demo.ts",
     "test:rls": "tsx --tsconfig scripts/tsconfig.json scripts/test-rls.ts",
     "seed:reference": "tsx --tsconfig scripts/tsconfig.json scripts/seed-reference.ts",
-    "review:doc": "tsx --tsconfig scripts/tsconfig.json scripts/medical-review.ts",
     "check:db": "tsx --tsconfig scripts/tsconfig.json scripts/check-db.ts",
-    "foods:build": "NODE_OPTIONS=--max-old-space-size=4096 tsx --tsconfig scripts/tsconfig.json scripts/foods/build.ts",
-    "foods:validate": "tsx --tsconfig scripts/tsconfig.json scripts/foods/validate.ts",
-    "check:sources": "tsx --tsconfig scripts/tsconfig.json scripts/check-sources.ts",
-    "check": "npm run lint && npm run typecheck && npm test && npm run check:data && npm run foods:validate && npm run test:e2e"
+    "check": "npm run lint && npm run typecheck && npm test && npm run test:e2e",
+    "sync:data": "tsx --tsconfig scripts/tsconfig.json scripts/sync-data.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { getTranslations } from 'next-intl/server'
 import { Download, KeyRound, PencilLine, ShieldOff, Sparkles, Trash2 } from 'lucide-react'
 import { isFreeMode, PRICES } from '@/lib/billing'

@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { getTranslations } from 'next-intl/server'
 import { ArrowRight, Camera, Scale } from 'lucide-react'
 import { ProBadge } from '@/components/app/ProBadge'

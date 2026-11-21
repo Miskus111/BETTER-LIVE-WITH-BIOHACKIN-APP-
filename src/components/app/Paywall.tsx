@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from '@/components/ui/Link'
 import { getTranslations } from 'next-intl/server'
 import { Check, Lock } from 'lucide-react'
 import { PRICES, type Feature } from '@/lib/billing'
