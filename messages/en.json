@@ -463,7 +463,11 @@
     "supportLinks": "Crisis line (CZ) 116 123 · anabell.cz — eating-disorder support",
     "deleteEntry": "Delete",
     "proteinShort": "protein",
-    "saveError": "The meal couldn't be saved. Check your connection and try again."
+    "saveError": "The meal couldn't be saved. Check your connection and try again.",
+    "conflictAllergy": "Allergy: {what}",
+    "conflictDiet": "Not {what}",
+    "conflictDislike": "You don't eat: {what}",
+    "conflictNote": "From your profile — the product's label decides."
   },
   "supp": {
     "title": "Supplements",

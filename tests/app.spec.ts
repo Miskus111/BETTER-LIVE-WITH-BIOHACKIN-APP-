@@ -69,6 +69,16 @@ test('food diary shows targets and logged meals', async ({ page }) => {
   await expect(page.getByTestId('meal-breakfast')).toContainText(/Ovesné vločky|Oats/)
 })
 
+test('food diary warns about foods that clash with the profile (allergy, diet)', async ({ page }) => {
+  // the preview profile is vegetarian with a nut allergy
+  await page.goto('/preview/eat')
+  await page.getByTestId('meal-snack').getByRole('button', { name: /Přidat|Add/ }).click()
+  await page.getByTestId('meal-snack').getByRole('textbox').first().fill('mandle')
+  await expect(page.getByTestId('diary-conflict').first()).toContainText('Ořechy')
+  await page.getByTestId('meal-snack').getByRole('textbox').first().fill('hovězí')
+  await expect(page.getByTestId('diary-conflict').first()).toContainText(/vegetarián/i)
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()

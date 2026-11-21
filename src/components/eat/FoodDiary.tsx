@@ -10,6 +10,7 @@ import { NUTRIENTS } from '@/data/nutrients'
 import type { NutrientId } from '@/data/types'
 import { createClient } from '@/lib/supabase/client'
 import { cx } from '@/lib/format'
+import { conflictsFor, type Conflict, type DietProfile } from '@/lib/eat/conflicts'
 
 /** daily targets that differ from the label NRV (EFSA adequate intake for adults) */
 const DIARY_TARGET: Partial<Record<NutrientId, number>> = { vitD: 15 }
@@ -30,8 +31,20 @@ export interface LogRow {
 const MEALS: Meal[] = ['breakfast', 'lunch', 'dinner', 'snack']
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
-export function FoodDiary({ rows, day }: { rows: LogRow[]; day: string }) {
+const NO_PROFILE: DietProfile = { diet: null, allergies: [], dislikes: [] }
+
+export function FoodDiary({
+  rows,
+  day,
+  profile = NO_PROFILE,
+}: {
+  rows: LogRow[]
+  day: string
+  /** allergies, diet and dislikes from onboarding: matching foods get a warning and go last */
+  profile?: DietProfile
+}) {
   const t = useTranslations('eat')
+  const opt = useTranslations('onboarding.options')
   const locale = useLocale()
   const router = useRouter()
   const [open, setOpen] = useState<Meal | null>(null)
@@ -44,11 +57,23 @@ export function FoodDiary({ rows, day }: { rows: LogRow[]; day: string }) {
   const results = useMemo(
     () =>
       FOODS.filter((f) => matchesText(f, q))
-        // dry rice, pasta and pulses are rarely eaten as such: ready-to-eat versions first
-        .sort((a, b) => Number(a.state === 'dry') - Number(b.state === 'dry'))
+        .map((f) => ({ f, conflicts: conflictsFor(f, profile) }))
+        // foods that clash with the profile last; dry rice, pasta and pulses (rarely eaten as such) after ready-to-eat
+        .sort(
+          (a, b) =>
+            Number(a.conflicts.length > 0) - Number(b.conflicts.length > 0) ||
+            Number(a.f.state === 'dry') - Number(b.f.state === 'dry'),
+        )
         .slice(0, 8),
-    [q],
+    [q, profile],
   )
+
+  const conflictText = (c: Conflict) =>
+    c.kind === 'allergy'
+      ? t('conflictAllergy', { what: opt(`allergies.${c.allergy}` as 'allergies.gluten') })
+      : c.kind === 'diet'
+        ? t('conflictDiet', { what: opt(`diet.${c.diet}` as 'diet.vegan').toLowerCase() })
+        : t('conflictDislike', { what: c.word })
 
   const add = (meal: Meal, slug: string) =>
     start(async () => {
@@ -164,7 +189,7 @@ export function FoodDiary({ rows, day }: { rows: LogRow[]; day: string }) {
                   />
                 </div>
                 <ul className="mt-2 max-h-64 overflow-y-auto">
-                  {results.map((f) => (
+                  {results.map(({ f, conflicts }) => (
                     <li key={f.id}>
                       <button
                         type="button"
@@ -175,6 +200,15 @@ export function FoodDiary({ rows, day }: { rows: LogRow[]; day: string }) {
                         <span className="min-w-0">
                           <span className="block truncate text-[14.5px]">{f.name}</span>
                           <span className="text-subtle block truncate text-[12px]">{f.basis}</span>
+                          {conflicts.length > 0 && (
+                            <span
+                              className="text-warn block text-[12px]"
+                              title={t('conflictNote')}
+                              data-testid="diary-conflict"
+                            >
+                              {conflicts.map(conflictText).join(' · ')}
+                            </span>
+                          )}
                         </span>
                         <span className="text-subtle shrink-0 text-right font-mono text-[12px]">
                           {grams.trim()

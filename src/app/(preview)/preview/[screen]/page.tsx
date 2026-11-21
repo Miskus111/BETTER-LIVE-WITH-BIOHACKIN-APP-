@@ -244,6 +244,7 @@ export default async function Preview({ params }: { params: Promise<{ screen: st
           />
           <FoodDiary
             day="2026-11-16"
+            profile={{ diet: 'vegetarian', allergies: ['nuts'], dislikes: [] }}
             rows={[
               {
                 id: '1',

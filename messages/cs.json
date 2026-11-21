@@ -463,7 +463,11 @@
     "supportLinks": "Linka první psychické pomoci 116 123 (nonstop) · anabell.cz — pomoc při poruchách příjmu potravy",
     "deleteEntry": "Smazat",
     "proteinShort": "bílk.",
-    "saveError": "Jídlo se nepodařilo uložit. Zkontrolujte připojení a zkuste to znovu."
+    "saveError": "Jídlo se nepodařilo uložit. Zkontrolujte připojení a zkuste to znovu.",
+    "conflictAllergy": "Alergie: {what}",
+    "conflictDiet": "Neodpovídá stravě: {what}",
+    "conflictDislike": "Nejíte: {what}",
+    "conflictNote": "Podle vašeho profilu — rozhoduje etiketa výrobku."
   },
   "supp": {
     "title": "Doplňky",

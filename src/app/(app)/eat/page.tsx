@@ -13,7 +13,11 @@ export default async function EatPage() {
   const t = await getTranslations('eat')
   const day = new Date().toISOString().slice(0, 10)
   const [{ data: prefs }, { data: goals }, { data: logs }] = await Promise.all([
-    db.from('preferences').select('training_days, work_pattern').eq('user_id', user.id).maybeSingle(),
+    db
+      .from('preferences')
+      .select('training_days, work_pattern, diet_type, allergies, dislikes')
+      .eq('user_id', user.id)
+      .maybeSingle(),
     db.from('goals').select('goal').order('priority'),
     db
       .from('food_logs')
@@ -52,7 +56,15 @@ export default async function EatPage() {
         </Link>
       </div>
       <TargetsCard result={result} totals={totals} />
-      <FoodDiary rows={rows} day={day} />
+      <FoodDiary
+        rows={rows}
+        day={day}
+        profile={{
+          diet: prefs?.diet_type ?? null,
+          allergies: prefs?.allergies ?? [],
+          dislikes: prefs?.dislikes ?? [],
+        }}
+      />
     </div>
   )
 }
