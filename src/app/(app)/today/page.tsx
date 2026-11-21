@@ -6,6 +6,7 @@ import { profileTargets } from '@/lib/eat/profile-targets'
 import { CheckIn } from '@/components/today/CheckIn'
 import { cx } from '@/lib/format'
 import { trendChange, withTrend } from '@/lib/body/weight'
+import { readingFor, readingMinutes } from '@/lib/today/reading'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 const iso = (d: Date) => d.toISOString().slice(0, 10)
@@ -52,8 +53,12 @@ export default async function TodayPage() {
       .eq('confirmed', true)
       .order('taken_on', { ascending: false })
       .limit(200),
-    db.from('goals').select('goal'),
-    db.from('preferences').select('training_days, work_pattern').eq('user_id', user.id).maybeSingle(),
+    db.from('goals').select('goal').order('priority'),
+    db
+      .from('preferences')
+      .select('training_days, work_pattern, sports, pain_areas')
+      .eq('user_id', user.id)
+      .maybeSingle(),
     db
       .from('body_measurements')
       .select('measured_at, weight_kg')
@@ -99,6 +104,11 @@ export default async function TodayPage() {
     stress: number | null
   } | null
   const trainingDays = prefs.data?.training_days ?? 3
+  const reading = readingFor({
+    goals: (goals.data ?? []).map((g: { goal: string }) => g.goal),
+    painAreas: prefs.data?.pain_areas ?? [],
+    sports: prefs.data?.sports ?? [],
+  })
 
   // one practical nudge, most important first
   const hour = now.getHours()
@@ -228,6 +238,29 @@ export default async function TodayPage() {
           </li>
         ))}
       </ul>
+
+      <section className="mt-8" aria-labelledby="reading" data-testid="today-reading">
+        <h2 id="reading" className="text-[17px] font-medium">
+          {t('readingTitle')}
+        </h2>
+        <p className="text-subtle mt-1 text-[13.5px]">{t('readingHint')}</p>
+        <ul className="mt-3 grid gap-3 md:grid-cols-3">
+          {reading.map((g) => (
+            <li key={g.slug}>
+              <Link
+                href={`/jak-funguje-telo/${g.slug}`}
+                className="card hover:border-cyan/40 flex h-full flex-col gap-1.5 p-4 transition"
+              >
+                <span className="text-[15.5px] font-medium">{g.title}</span>
+                <span className="text-muted line-clamp-2 text-[13.5px]">{g.hook}</span>
+                <span className="text-subtle mt-auto font-mono text-[12px]">
+                  {t('readingMinutes', { n: readingMinutes(g) })}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       <div className="mt-6">
         <CheckIn

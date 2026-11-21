@@ -269,7 +269,10 @@
     "f_resting_hr": "Klidový tep",
     "f_stress": "Stres",
     "thisWeek": "tento týden",
-    "ofKcal": "z {target} kcal"
+    "ofKcal": "z {target} kcal",
+    "readingTitle": "Čtení pro vás",
+    "readingHint": "Vybrané podle vašich cílů, bolestí a sportu z profilu.",
+    "readingMinutes": "{n} min čtení"
   },
   "settings": {
     "title": "Nastavení",

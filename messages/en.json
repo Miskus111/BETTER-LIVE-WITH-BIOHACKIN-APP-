@@ -269,7 +269,10 @@
     "f_resting_hr": "Resting HR",
     "f_stress": "Stress",
     "thisWeek": "this week",
-    "ofKcal": "of {target} kcal"
+    "ofKcal": "of {target} kcal",
+    "readingTitle": "Reading for you",
+    "readingHint": "Picked from the goals, pain areas and sports in your profile (articles in Czech).",
+    "readingMinutes": "{n} min read"
   },
   "settings": {
     "title": "Settings",
