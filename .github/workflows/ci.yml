@@ -26,6 +26,8 @@ jobs:
         run: npm run typecheck
       - name: Unit tests
         run: npm test
+      - name: Database migrations (throwaway Postgres)
+        run: npm run test:migrations
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
       - name: E2E (builds into .next-test)

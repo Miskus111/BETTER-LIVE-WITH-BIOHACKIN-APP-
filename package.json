@@ -18,7 +18,8 @@
     "seed:reference": "tsx --tsconfig scripts/tsconfig.json scripts/seed-reference.ts",
     "check:db": "tsx --tsconfig scripts/tsconfig.json scripts/check-db.ts",
     "check": "npm run lint && npm run typecheck && npm test && npm run test:e2e",
-    "sync:data": "tsx --tsconfig scripts/tsconfig.json scripts/sync-data.ts"
+    "sync:data": "tsx --tsconfig scripts/tsconfig.json scripts/sync-data.ts",
+    "test:migrations": "node scripts/test-migrations.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
@@ -37,6 +38,7 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.2.17",
     "@playwright/test": "^1.65.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22.20.5",

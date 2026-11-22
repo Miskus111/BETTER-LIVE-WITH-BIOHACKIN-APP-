@@ -14,19 +14,20 @@ npm install
 npm run dev            # http://localhost:3000
 ```
 
-| Skript                    | Co dělá                                                                          |
-| ------------------------- | -------------------------------------------------------------------------------- |
-| `npm run check`           | Vše, co spouští CI: lint, typecheck, unit testy a e2e                            |
-| `npm run dev`             | Vývojový server                                                                  |
-| `npm run build` / `start` | Produkční build                                                                  |
-| `npm test`                | Vitest unit testy                                                                |
-| `npm run test:e2e`        | Playwright: smoke testy + screenshoty 390/768/1440 (build do `.next-test`)       |
-| `npm run sync:data`       | Převezme sdílená data (potraviny, doplňky, cviky, orgány) z checkoutu webu       |
-| `npm run check:db`        | Produkční databáze má funkce z migrací a celou knihovnu cviků (čte `.env.local`) |
-| `npm run test:rls`        | Test izolace RLS proti projektu Supabase                                         |
-| `npm run seed:reference`  | Nahraje knihovny cviků, potravin a doplňků do Supabase (service key)             |
-| `npm run seed:demo`       | Vytvoří / obnoví demo uživatele                                                  |
-| `npm run gen:seed`        | Znovu vygeneruje `supabase/seed.sql` z `src/data`                                |
+| Skript                    | Co dělá                                                                                       |
+| ------------------------- | --------------------------------------------------------------------------------------------- |
+| `npm run check`           | Vše, co spouští CI: lint, typecheck, unit testy a e2e                                         |
+| `npm run dev`             | Vývojový server                                                                               |
+| `npm run build` / `start` | Produkční build                                                                               |
+| `npm test`                | Vitest unit testy                                                                             |
+| `npm run test:e2e`        | Playwright: smoke testy + screenshoty 390/768/1440 (build do `.next-test`)                    |
+| `npm run sync:data`       | Převezme sdílená data (potraviny, doplňky, cviky, orgány) z checkoutu webu                    |
+| `npm run check:db`        | Produkční databáze má funkce z migrací a celou knihovnu cviků (čte `.env.local`)              |
+| `npm run test:rls`        | Test izolace RLS proti projektu Supabase                                                      |
+| `npm run test:migrations` | Všechny migrace na dočasném Postgresu (PGlite) + kontrola zabezpečení, registrace a limitů AI |
+| `npm run seed:reference`  | Nahraje knihovny cviků, potravin a doplňků do Supabase (service key)                          |
+| `npm run seed:demo`       | Vytvoří / obnoví demo uživatele                                                               |
+| `npm run gen:seed`        | Znovu vygeneruje `supabase/seed.sql` z `src/data`                                             |
 
 První běh Playwrightu: `npx playwright install chromium`.
 
