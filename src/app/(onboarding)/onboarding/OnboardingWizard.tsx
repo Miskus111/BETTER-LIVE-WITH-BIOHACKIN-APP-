@@ -1,8 +1,10 @@
 'use client'
 
+import { useSafeTransition } from '@/lib/useSafeTransition'
+
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { ArrowLeft, Check, Loader2, ShieldCheck } from 'lucide-react'
 import type { z } from 'zod'
 import {
@@ -58,7 +60,7 @@ export function OnboardingWizard({
   const [v, setV] = useState<WizardInitial>(initial)
   const [errors, setErrors] = useState<Set<string>>(new Set())
   const [saveError, setSaveError] = useState(false)
-  const [pending, start] = useTransition()
+  const [pending, start] = useSafeTransition(() => setSaveError(true))
   const step = STEPS[i]
 
   const set = (k: string, val: unknown) => setV((s) => ({ ...s, [k]: val }))

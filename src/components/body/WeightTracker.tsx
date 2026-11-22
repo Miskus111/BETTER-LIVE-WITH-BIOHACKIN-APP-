@@ -1,8 +1,10 @@
 'use client'
 
+import { useSafeTransition } from '@/lib/useSafeTransition'
+
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState, useTransition } from 'react'
+import { useMemo, useState } from 'react'
 import { ChevronDown, Trash2 } from 'lucide-react'
 import {
   CartesianGrid,
@@ -59,8 +61,8 @@ export function WeightTracker({
   const t = useTranslations('weight')
   const locale = useLocale()
   const router = useRouter()
-  const [pending, start] = useTransition()
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+  const [pending, start] = useSafeTransition(() => setMsg({ ok: false, text: t('error') }))
   const [more, setMore] = useState(false)
   const [range, setRange] = useState<(typeof RANGES)[number]>(90)
 

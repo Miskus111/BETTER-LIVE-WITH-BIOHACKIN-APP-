@@ -1,8 +1,10 @@
 'use client'
 
+import { useSafeTransition } from '@/lib/useSafeTransition'
+
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { saveCheckIn, type CheckInInput } from '@/app/(app)/today/actions'
 
 const n = (v: FormDataEntryValue | null) => {
@@ -15,8 +17,8 @@ const n = (v: FormDataEntryValue | null) => {
 export function CheckIn({ date, initial }: { date: string; initial: Partial<CheckInInput> }) {
   const t = useTranslations('today')
   const router = useRouter()
-  const [pending, start] = useTransition()
   const [msg, setMsg] = useState<string | null>(null)
+  const [pending, start] = useSafeTransition(() => setMsg(t('checkinError')))
   const fields = [
     ['sleep_hours', 'h', 'decimal'],
     ['sleep_quality', '1–5', 'numeric'],

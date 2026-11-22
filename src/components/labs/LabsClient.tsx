@@ -1,8 +1,10 @@
 'use client'
 
+import { useSafeTransition } from '@/lib/useSafeTransition'
+
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { useMemo, useState, useTransition } from 'react'
+import { useMemo, useState } from 'react'
 import { AlertTriangle, FileUp, ClipboardPaste, Scale, ShieldAlert, Trash2 } from 'lucide-react'
 import {
   MARKERS,
@@ -104,8 +106,8 @@ export function LabsClient({
   const router = useRouter()
   const [mode, setMode] = useState<Mode>(aiEnabled ? 'upload' : 'paste')
   const [busy, setBusy] = useState(false)
-  const [pending, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [pending, start] = useSafeTransition(() => setError(t('err_generic')))
   const [draft, setDraft] = useState<Draft | null>(null)
   const [text, setText] = useState('')
   const [saved, setSaved] = useState(false)
