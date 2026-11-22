@@ -241,6 +241,9 @@ ok(leaks.length === 0, `every user table isolated between users (${iso.length - 
   await db.exec(
     'grant select, insert, delete on storage.objects to authenticated; grant usage on schema storage to authenticated;',
   )
+  // proves the check catches a leak: an extra policy that lets everyone read every file
+  if (process.env.STORAGE_SELFTEST === '1')
+    await db.exec(`create policy leak on storage.objects for select to authenticated using (true)`)
   const [a, b] = (
     await db.query(
       `select id from auth.users where email in ('a@example.test','b@example.test') order by email`,
