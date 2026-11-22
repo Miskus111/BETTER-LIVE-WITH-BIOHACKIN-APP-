@@ -40,6 +40,23 @@ První běh Playwrightu: `npx playwright install chromium`.
   Aplikace používá jen lehký index potravin (`foods.lite.generated.json`).
 - `/` přesměruje na `/today` (nepřihlášené na přihlášení). Aplikace se neindexuje (`robots.txt`).
 
+## Podle profilu
+
+Odpovědi z onboardingu (cíle v pořadí priority, sport, vybavení, strava, alergie, bolesti, práce) mění obrazovky.
+Logika je v čistých funkcích s testy, obrazovky ji jen zobrazují:
+
+| Obrazovka  | Co se mění                                                                          | Kód                                        |
+| ---------- | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| Dnes       | tip dne (laboratoř, silná bolest, spánek, bílkoviny, trénink), „Čtení pro vás“      | `lib/today/tip.ts`, `lib/today/reading.ts` |
+| Jídelníček | upozornění na alergie, stravu a nechtěné potraviny; `?add=<id>` otevře jídlo z webu | `lib/eat/conflicts.ts`                     |
+| Trénink    | šablony pro váš sport první, „půjde n z m cviků“ s vaším vybavením                  | `lib/train/template-fit.ts`                |
+| Mobilita   | sestava pro sedavou práci a pro váš sport                                           | `lib/pain/routine-fit.ts`                  |
+| Doplňky    | B12, vitamín D v zimě, jód, omega-3 podle stravy                                    | `lib/supplements/suggestions.ts`           |
+| AI kouč    | čte celý profil přes nástroj `get_profile`                                          | `lib/coach/tools.ts`                       |
+
+Ukázky pro testy (`ENABLE_PREVIEW=1`): `/preview/today`, `/preview/eat?add=almonds`, `/preview/train`,
+`/preview/mobility`, `/preview/supplements` — vždy s ukázkovým profilem popsaným v `preview/[screen]/page.tsx`.
+
 ## Supabase setup (EU)
 
 1. Create a project at supabase.com in an **EU region** (this project uses North EU / Stockholm).
@@ -74,20 +91,6 @@ unit testy a celou e2e sadu. Při selhání se přiloží report Playwrightu.
 `npm test` runs unit tests. `npm run test:e2e` builds into `.next-test` and starts it with `ENABLE_PREVIEW=1`, which
 enables the test-only `/preview/<screen>` pages used to test signed-in screens without a login. Never set
 `ENABLE_PREVIEW` in production.
-
-## AI (coach + lab reading)
-
-Set `ANTHROPIC_API_KEY` (server-only) and optionally `ANTHROPIC_MODEL` (default `claude-opus-5-5`). The coach's
-rules live in [`system-prompt.md`](system-prompt.md); safety pre-screening is in `src/lib/coach/safety.ts`. Without a
-key the app still works: the coach shows a notice and Labs accepts pasted text only.
-
-## Tests
-
-GitHub Actions (`.github/workflows/ci.yml`) spouští při každém pushi na `main` a u pull requestů lint, typecheck,
-unit testy a celou e2e sadu. Při selhání se přiloží report Playwrightu.
-
-`npm run test:e2e` builds into `.next-test` and starts it with `ENABLE_PREVIEW=1`, which enables the test-only
-`/preview/<screen>` pages used to test signed-in screens without a login. Never set `ENABLE_PREVIEW` in production.
 
 ## Bezpečnost
 
