@@ -104,6 +104,8 @@ enables the test-only `/preview/<screen>` pages used to test signed-in screens w
 
 ## Před spuštěním
 
+Podrobný postup krok za krokem: [docs/nasazeni.md](docs/nasazeni.md).
+
 - Vercel: nový projekt z tohoto repozitáře, region se nastaví z `vercel.json` (Stockholm). Proměnné prostředí z
   `.env.example`, hlavně Supabase, `NEXT_PUBLIC_WEB_URL` (adresa webu) a `NEXT_PUBLIC_SITE_URL` (adresa aplikace).
 - Supabase → Auth → URL Configuration: Site URL = adresa aplikace, Redirect URLs `https://<aplikace>/auth/callback`.
