@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { gzipSync } from 'node:zlib'
 
 /** App smoke tests: sign-in gate, login and password reset, paywall, accessibility and redirects to the website. */
 
@@ -140,4 +141,17 @@ test('a deep link keeps its query through the login redirect (food from the webs
   // without Supabase keys (CI) the app shows a setup screen instead of redirecting
   test.skip(res.status() !== 307, 'Supabase not configured')
   expect(res.headers()['location']).toContain(`next=${encodeURIComponent('/eat?add=almonds')}`)
+})
+
+test('JavaScript budget: login and the screens bundle stay light (gzip)', async ({ request }) => {
+  // ~10 % above the sizes measured on 22 Nov 2026. All previews share one page that bundles every screen, so
+  // that number is a ceiling for the whole app; a jump usually means a large data file reached the browser.
+  const budget: Record<string, number> = { '/login': 295, '/preview/today': 610 }
+  for (const [path, maxKb] of Object.entries(budget)) {
+    const html = await (await request.get(path)).text()
+    const srcs = [...new Set([...html.matchAll(/src="(\/_next\/static\/[^"]+\.js)"/g)].map((m) => m[1]))]
+    let bytes = 0
+    for (const src of srcs) bytes += gzipSync(await (await request.get(src)).body()).length
+    expect(Math.round(bytes / 1024), `${path} JS (KB gzip)`).toBeLessThanOrEqual(maxKb)
+  }
 })
