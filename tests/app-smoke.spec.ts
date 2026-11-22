@@ -84,7 +84,13 @@ test('accessibility: no serious or critical axe violations on app screens, login
     'photos',
     'paywall',
   ]
-  for (const path of ['/login', '/reset-password', ...screens.map((s) => `/preview/${s}`)]) {
+  // the diary also with the search open and an allergy warning shown (vegetarian with a nut allergy)
+  for (const path of [
+    '/login',
+    '/reset-password',
+    '/preview/eat?add=almonds',
+    ...screens.map((s) => `/preview/${s}`),
+  ]) {
     await page.goto(path)
     await page.addScriptTag({ path: 'node_modules/axe-core/axe.min.js' })
     const violations = await page.evaluate(async () => {
