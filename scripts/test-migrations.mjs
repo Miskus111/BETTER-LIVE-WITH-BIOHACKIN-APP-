@@ -215,14 +215,81 @@ async function isolationCheck(db) {
         : `LEAK seen=${seen} updated=${upd} wroteAsOther=${wrote}`,
     ])
   }
+  // shared libraries (owner_id empty = library row, otherwise someone's own item)
+  for (const t of ['exercises', 'foods', 'mobility_exercises', 'mobility_routines', 'recipes']) {
+    const base = await rowFor(t, B)
+    if (!base) {
+      out.push([t, 'not covered'])
+      continue
+    }
+    let n = 0
+    const hasSlug = (
+      await db.query(
+        `select 1 from information_schema.columns where table_schema='public' and table_name=$1 and column_name='slug'`,
+        [t],
+      )
+    ).rows.length
+    // unique text values: libraries have unique slugs
+    const withOwner = (sql, owner) =>
+      sql
+        .replace(/'x'/g, () => `'x-${t}-${++n}'`)
+        .replace(
+          /\) values \(/,
+          sql.includes('slug') || !hasSlug ? `, owner_id) values (` : `, owner_id, slug) values (`,
+        )
+        .replace(/\)$/, sql.includes('slug') || !hasSlug ? `, ${owner})` : `, ${owner}, 'slug-${t}-${++n}')`)
+    let lib, mine
+    try {
+      lib = (await db.query(withOwner(base, 'null') + ' returning id')).rows[0].id
+      mine = (await db.query(withOwner(base, `'${B}'`) + ' returning id')).rows[0].id
+    } catch (e) {
+      out.push([t, 'not covered: ' + e.message.slice(0, 50)])
+      continue
+    }
+    await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub', '${A}', false);`)
+    const seesLib = (await db.query(`select count(*)::int n from public.${t} where id = $1`, [lib])).rows[0].n
+    const seesOthers = (await db.query(`select count(*)::int n from public.${t} where id = $1`, [mine]))
+      .rows[0].n
+    const changedLib = (
+      await db.query(`update public.${t} set owner_id = owner_id where id = $1 returning 1`, [lib])
+    ).rows.length
+    const deletedLib = (await db.query(`delete from public.${t} where id = $1 returning 1`, [lib])).rows
+      .length
+    let fakeLib = true
+    try {
+      await db.exec(withOwner(base, 'null'))
+    } catch {
+      fakeLib = false
+    }
+    let ownItem = false
+    try {
+      await db.exec(withOwner(base, `'${A}'`))
+      ownItem = true
+    } catch {
+      ownItem = false
+    }
+    await db.exec('reset role;')
+    out.push([
+      `${t} (library)`,
+      seesLib === 1 && seesOthers === 0 && changedLib === 0 && deletedLib === 0 && !fakeLib && ownItem
+        ? 'isolated'
+        : `LEAK seesLib=${seesLib} seesOthers=${seesOthers} changedLib=${changedLib} deletedLib=${deletedLib} fakeLib=${fakeLib} ownItem=${ownItem}`,
+    ])
+  }
   return out
 }
 
+// a policy that would let anyone edit the shared exercise library
+if (process.env.LIB_SELFTEST === '1')
+  await db.exec(`create policy leak on public.exercises for update to authenticated using (true)`)
 if (process.env.RLS_SELFTEST === '1') await db.exec('alter table public.food_logs disable row level security') // proves the check catches a leak
 const iso = await isolationCheck(db)
 const leaks = iso.filter(([, s]) => s !== 'isolated')
 for (const [t, s] of leaks) console.log('  ', t, '—', s)
-ok(leaks.length === 0, `every user table isolated between users (${iso.length - leaks.length}/${iso.length})`)
+ok(
+  leaks.length === 0,
+  `user data and shared libraries isolated between users (${iso.length - leaks.length}/${iso.length})`,
+)
 {
   const [a, b] = (
     await db.query(
