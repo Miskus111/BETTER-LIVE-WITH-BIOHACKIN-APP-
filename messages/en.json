@@ -591,7 +591,8 @@
       "calf_swelling": "One calf is swollen, warm and tender (especially after long sitting, travel or surgery)"
     },
     "painJump": "Something hurts? Tap the spot on the body map for a safe plan.",
-    "exercisesCount": "{n, plural, one {# exercise} other {# exercises}}"
+    "exercisesCount": "{n, plural, one {# exercise} other {# exercises}}",
+    "forYou": "For you — from your profile"
   },
   "labs": {
     "title": "Labs",

@@ -591,7 +591,8 @@
       "calf_swelling": "Jedno lýtko je oteklé, teplé a bolestivé (zvlášť po dlouhém sezení, cestě nebo operaci)"
     },
     "painJump": "Něco vás bolí? Klepněte na místo na těle a dostanete bezpečný plán.",
-    "exercisesCount": "{n, plural, one {# cvik} few {# cviky} other {# cviků}}"
+    "exercisesCount": "{n, plural, one {# cvik} few {# cviky} other {# cviků}}",
+    "forYou": "Pro vás — podle profilu"
   },
   "labs": {
     "title": "Laboratoř",

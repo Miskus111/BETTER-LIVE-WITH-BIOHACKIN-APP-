@@ -6,18 +6,24 @@ import { ROUTINES } from '@/data/mobility'
 import type { Region } from '@/lib/pain/red-flags'
 import { PainMap } from '@/components/mobility/PainMap'
 import { PainChart } from '@/components/mobility/PainChart'
+import { rankRoutines } from '@/lib/pain/routine-fit'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function MobilityPage() {
-  const { supabase } = await requireAppUser()
+  const { supabase, user } = await requireAppUser()
   const t = await getTranslations('mob')
   const locale = (await getLocale()) as 'cs' | 'en'
-  const { data } = await (supabase as unknown as Db)
-    .from('pain_reports')
-    .select('region, score, reported_at, red_flags')
-    .order('reported_at')
-    .limit(500)
+  const db = supabase as unknown as Db
+  const [{ data }, { data: prefs }] = await Promise.all([
+    db.from('pain_reports').select('region, score, reported_at, red_flags').order('reported_at').limit(500),
+    db.from('preferences').select('sports, work_pattern, pain_areas').eq('user_id', user.id).maybeSingle(),
+  ])
+  const { routines, forYou } = rankRoutines(ROUTINES, {
+    sports: prefs?.sports ?? [],
+    workPattern: prefs?.work_pattern ?? null,
+    painAreas: prefs?.pain_areas ?? [],
+  })
   const reports = (data ?? []) as { region: Region; score: number; reported_at: string }[]
   const latest: Partial<Record<Region, number>> = {}
   for (const r of reports) latest[r.region] = r.score
@@ -41,14 +47,15 @@ export default async function MobilityPage() {
       <section>
         <h2 className="eyebrow mb-4">{t('routines')}</h2>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {ROUTINES.map((r) => (
-            <li key={r.id}>
+          {routines.map((r) => (
+            <li key={r.id} data-testid={`routine-${r.id}`}>
               <Link
                 href={`/mobility/routine/${r.id}`}
                 className="card hover:border-cyan/40 flex h-full items-center justify-between gap-3 p-4"
               >
                 <span>
                   <span className="block text-[15.5px] font-medium">{r.name[locale]}</span>
+                  {forYou.has(r.id) && <span className="text-bio block text-[12.5px]">{t('forYou')}</span>}
                   <span className="text-subtle font-mono text-[12.5px]">
                     {r.minutes} {t('min')} · {t('exercisesCount', { n: r.items.length })}
                   </span>
