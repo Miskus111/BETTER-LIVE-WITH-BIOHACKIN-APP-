@@ -503,7 +503,17 @@
     "cond_liver": "Onemocnění jater",
     "conditionsNote": "Upozorníme na doplňky, které v té situaci patří k lékaři. Zůstává jen v tomto zařízení.",
     "saveError": "Doplněk se nepodařilo uložit. Zkontrolujte připojení a zkuste to znovu.",
-    "libraryMissing": "Knihovna doplňků ještě není nahraná. Zkuste to prosím později."
+    "libraryMissing": "Knihovna doplňků ještě není nahraná. Zkuste to prosím později.",
+    "forProfile": "Podle vašeho profilu",
+    "forProfileNote": "Obecná doporučení podle stravy a ročního období, ne lékařská rada. Při nemoci nebo lécích se poraďte s lékařem.",
+    "needed": "Nutné",
+    "consider": "Zvažte",
+    "readGuide": "Proč a jaká forma",
+    "whyB12Vegan": "Vitamín B12 je jediná živina, kterou veganská strava bez obohacených potravin nedodá. Doplněk je nutný.",
+    "whyB12Vegetarian": "Z mléka a vajec ho bývá málo; u vegetariánů je nedostatek B12 častý.",
+    "whyIodineVegan": "Bez mléčných výrobků a ryb je hlavním zdrojem jodu jodidovaná sůl. Kdo ji nepoužívá, má jodu často málo.",
+    "whyOmega3NoFish": "Bez ryb chybí dlouhé omega-3 (EPA a DHA). Rostlinná ALA se na ně mění jen málo; existuje doplněk z řas.",
+    "whyVitDWinter": "Od října do března se v našich zeměpisných šířkách vitamín D v kůži téměř netvoří."
   },
   "evidence": {
     "established": "Prokázané",

@@ -503,7 +503,17 @@
     "cond_liver": "Liver disease",
     "conditionsNote": "We flag supplements that need a doctor in that situation. Stored only on this device.",
     "saveError": "The supplement couldn't be saved. Check your connection and try again.",
-    "libraryMissing": "The supplement library isn't loaded yet. Please try again later."
+    "libraryMissing": "The supplement library isn't loaded yet. Please try again later.",
+    "forProfile": "Based on your profile",
+    "forProfileNote": "General suggestions from your diet and the season, not medical advice. If you are ill or on medication, ask your doctor.",
+    "needed": "Needed",
+    "consider": "Consider",
+    "readGuide": "Why and which form",
+    "whyB12Vegan": "Vitamin B12 is the one nutrient a vegan diet cannot supply without fortified foods. A supplement is needed.",
+    "whyB12Vegetarian": "Milk and eggs provide little of it; B12 deficiency is common in vegetarians.",
+    "whyIodineVegan": "Without dairy and fish, iodised salt is the main iodine source. Without it, intake is often low.",
+    "whyOmega3NoFish": "Without fish, long-chain omega-3 (EPA and DHA) is missing. Plant ALA converts poorly; an algae supplement exists.",
+    "whyVitDWinter": "From October to March the skin makes almost no vitamin D at Central European latitudes."
   },
   "evidence": {
     "established": "Established",
