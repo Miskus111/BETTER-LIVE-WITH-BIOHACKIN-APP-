@@ -177,3 +177,10 @@ test('training templates fit the profile: sport first, equipment shown', async (
   await expect(page.getByTestId('template-full-body-a')).toContainText(/půjde \d z 5 cviků/)
   await expect(page.getByTestId('template-home-bodyweight')).not.toContainText('půjde')
 })
+
+test('the diary opens with a food from a deep link already searched', async ({ page }) => {
+  await page.goto('/preview/eat?add=almonds')
+  const lunch = page.getByTestId('meal-lunch')
+  await expect(lunch.getByRole('textbox').first()).toHaveValue('Mandle')
+  await expect(lunch.getByRole('button', { name: /Mandle/ }).first()).toBeVisible()
+})
