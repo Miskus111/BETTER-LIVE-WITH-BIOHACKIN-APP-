@@ -371,7 +371,9 @@
     "backToTrain": "Back to training",
     "templates": "Templates",
     "progress": "Progress",
-    "formInvalid": "Please check the form: duration 1–1440 min (whole minutes), distance 0–1000 km, average heart rate 30–230."
+    "formInvalid": "Please check the form: duration 1–1440 min (whole minutes), distance 0–1000 km, average heart rate 30–230.",
+    "forYourSport": "For your sport",
+    "templateFit": "{n} of {total} exercises work with your equipment"
   },
   "muscles": {
     "chest": "Chest",

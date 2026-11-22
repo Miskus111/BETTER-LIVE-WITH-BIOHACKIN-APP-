@@ -10,6 +10,8 @@ import { CoachChat } from '@/components/coach/CoachChat'
 import { LabsClient } from '@/components/labs/LabsClient'
 import { notFound } from 'next/navigation'
 import { TrainHome } from '@/components/train/TrainHome'
+import { TEMPLATES } from '@/data/exercises/templates'
+import { rankTemplates } from '@/lib/train/template-fit'
 import { WorkoutLogger } from '@/components/train/WorkoutLogger'
 import { ExerciseLibrary } from '@/components/train/ExerciseLibrary'
 import { PainFlow } from '@/components/mobility/PainFlow'
@@ -30,7 +32,14 @@ export default async function Preview({ params }: { params: Promise<{ screen: st
   const { screen } = await params
   switch (screen) {
     case 'train':
-      return <TrainHome finished={false} base="/preview" />
+      return (
+        <TrainHome
+          finished={false}
+          base="/preview"
+          // sample profile: a runner training at home without equipment
+          fit={rankTemplates(TEMPLATES, { equipment: ['none'], sports: ['running'] })}
+        />
+      )
     case 'session':
       return <WorkoutLogger home="/preview/train" />
     case 'library':

@@ -11,8 +11,18 @@ import { useHydrated } from '@/lib/useHydrated'
 import { EXERCISES } from '@/data/exercises'
 import { TEMPLATES } from '@/data/exercises/templates'
 import { ProBadge } from '@/components/app/ProBadge'
+import type { TemplateFit } from '@/lib/train/template-fit'
 
-export function TrainHome({ finished, base = '/train' }: { finished: boolean; base?: string }) {
+export function TrainHome({
+  finished,
+  base = '/train',
+  fit,
+}: {
+  finished: boolean
+  base?: string
+  /** templates ranked for this person's equipment and sport (authored order when missing) */
+  fit?: TemplateFit[]
+}) {
   const t = useTranslations('train')
   const locale = useLocale() === 'en' ? 'en' : 'cs'
   const router = useRouter()
@@ -106,25 +116,39 @@ export function TrainHome({ finished, base = '/train' }: { finished: boolean; ba
       <section className="mt-8">
         <h2 className="eyebrow mb-3">{t('templates')}</h2>
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {TEMPLATES.map((tpl) => (
-            <li key={tpl.id}>
-              <button
-                type="button"
-                disabled={hydrated && !!active}
-                onClick={() => {
-                  start(tpl.name[locale], tpl.exercises)
-                  router.push(`${base}/session`)
-                }}
-                className="card hover:border-cyan/40 h-full w-full p-4 text-left transition disabled:opacity-50"
-              >
-                <span className="block text-[15.5px] font-medium">{tpl.name[locale]}</span>
-                <span className="text-subtle mt-1 block text-[13px]">{tpl.description[locale]}</span>
-                <span className="text-cyan mt-2 block font-mono text-[12px]">
-                  {tpl.exercises.length} {t('exercises')}
-                </span>
-              </button>
-            </li>
-          ))}
+          {(
+            fit ??
+            TEMPLATES.map((x) => ({ id: x.id, doable: null, total: x.exercises.length, forSport: false }))
+          ).map((f) => {
+            const tpl = TEMPLATES.find((x) => x.id === f.id)!
+            return (
+              <li key={tpl.id} data-testid={`template-${tpl.id}`}>
+                <button
+                  type="button"
+                  disabled={hydrated && !!active}
+                  onClick={() => {
+                    start(tpl.name[locale], tpl.exercises)
+                    router.push(`${base}/session`)
+                  }}
+                  className="card hover:border-cyan/40 h-full w-full p-4 text-left transition disabled:opacity-50"
+                >
+                  <span className="block text-[15.5px] font-medium">{tpl.name[locale]}</span>
+                  <span className="text-subtle mt-1 block text-[13px]">{tpl.description[locale]}</span>
+                  <span className="text-cyan mt-2 block font-mono text-[12px]">
+                    {tpl.exercises.length} {t('exercises')}
+                  </span>
+                  {f.forSport && (
+                    <span className="text-bio mt-1 block text-[12.5px]">{t('forYourSport')}</span>
+                  )}
+                  {f.doable !== null && f.doable < f.total && (
+                    <span className="text-subtle mt-1 block text-[12.5px]">
+                      {t('templateFit', { n: f.doable, total: f.total })}
+                    </span>
+                  )}
+                </button>
+              </li>
+            )
+          })}
         </ul>
       </section>
     </div>

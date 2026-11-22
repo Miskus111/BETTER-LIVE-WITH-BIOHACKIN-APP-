@@ -72,7 +72,10 @@ test('food diary shows targets and logged meals', async ({ page }) => {
 test('food diary warns about foods that clash with the profile (allergy, diet)', async ({ page }) => {
   // the preview profile is vegetarian with a nut allergy
   await page.goto('/preview/eat')
-  await page.getByTestId('meal-snack').getByRole('button', { name: /Přidat|Add/ }).click()
+  await page
+    .getByTestId('meal-snack')
+    .getByRole('button', { name: /Přidat|Add/ })
+    .click()
   await page.getByTestId('meal-snack').getByRole('textbox').first().fill('mandle')
   await expect(page.getByTestId('diary-conflict').first()).toContainText('Ořechy')
   await page.getByTestId('meal-snack').getByRole('textbox').first().fill('hovězí')
@@ -163,4 +166,14 @@ test('photos: filter by pose and compare two photos side by side or with a slide
   await expect(cmp).toContainText('−2 kg')
   await cmp.getByRole('button', { name: 'Posuvník' }).click()
   await expect(cmp.getByRole('slider')).toBeVisible()
+})
+
+test('training templates fit the profile: sport first, equipment shown', async ({ page }) => {
+  // preview profile: a runner at home without equipment
+  await page.goto('/preview/train')
+  const first = page.locator('[data-testid^="template-"]').first()
+  await expect(first).toHaveAttribute('data-testid', 'template-runner-strength')
+  await expect(first).toContainText('Pro váš sport')
+  await expect(page.getByTestId('template-full-body-a')).toContainText(/půjde \d z 5 cviků/)
+  await expect(page.getByTestId('template-home-bodyweight')).not.toContainText('půjde')
 })

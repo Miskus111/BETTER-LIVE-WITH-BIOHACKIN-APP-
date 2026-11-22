@@ -13,7 +13,10 @@ test('paywall explains Pro and links to pricing on the website', async ({ page }
   await page.goto('/preview/paywall')
   const p = page.getByTestId('paywall')
   await expect(p).toContainText('Fotky pokroku jsou v Pro')
-  await expect(p.getByRole('link', { name: 'Zobrazit tarify' })).toHaveAttribute('href', /^https?:\/\/[^/]+\/pricing$/)
+  await expect(p.getByRole('link', { name: 'Zobrazit tarify' })).toHaveAttribute(
+    'href',
+    /^https?:\/\/[^/]+\/pricing$/,
+  )
 })
 
 test('password reset: the login form switches to an email-only reset form; a stale reset link explains itself', async ({
