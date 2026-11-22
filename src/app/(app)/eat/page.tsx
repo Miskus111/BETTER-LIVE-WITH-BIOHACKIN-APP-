@@ -1,5 +1,5 @@
 import Link from '@/components/ui/Link'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { requireAppUser } from '@/lib/auth'
 import { profileTargets } from '@/lib/eat/profile-targets'
 import { FoodDiary, mealNow, type LogRow } from '@/components/eat/FoodDiary'
@@ -62,7 +62,14 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
       <FoodDiary
         rows={rows}
         day={day}
-        prefill={prefill ? { name: prefill.name, meal: mealNow(new Date()) } : undefined}
+        prefill={
+          prefill
+            ? {
+                name: (await getLocale()) === 'en' ? prefill.nameEn || prefill.name : prefill.name,
+                meal: mealNow(new Date()),
+              }
+            : undefined
+        }
         profile={{
           diet: prefs?.diet_type ?? null,
           allergies: prefs?.allergies ?? [],

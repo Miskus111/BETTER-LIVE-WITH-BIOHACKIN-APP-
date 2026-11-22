@@ -5,7 +5,7 @@ import { profileSuggestions } from '@/lib/supplements/suggestions'
 import { TodayView } from '@/components/today/TodayView'
 import { readingFor } from '@/lib/today/reading'
 import { todayTip } from '@/lib/today/tip'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Apple, Dumbbell } from 'lucide-react'
 import { LooksHabits } from '@/components/looks/LooksHabits'
 import { ProgressCharts } from '@/components/train/ProgressCharts'
@@ -342,7 +342,11 @@ export default async function Preview({
           />
           <FoodDiary
             day="2026-11-16"
-            prefill={addFood ? { name: addFood.name, meal: 'lunch' } : undefined}
+            prefill={
+              addFood
+                ? { name: (await getLocale()) === 'en' ? addFood.nameEn : addFood.name, meal: 'lunch' }
+                : undefined
+            }
             profile={{ diet: 'vegetarian', allergies: ['nuts'], dislikes: [] }}
             rows={[
               {

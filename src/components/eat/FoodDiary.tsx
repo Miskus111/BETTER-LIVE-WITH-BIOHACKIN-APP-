@@ -7,6 +7,7 @@ import { Plus, Trash2 } from 'lucide-react'
 import { FOODS, foodById } from '@/data/foods'
 import { matchesText } from '@/lib/foods/query'
 import { NUTRIENTS } from '@/data/nutrients'
+import { PANEL_BY_KEY } from '@/lib/foods/panel'
 import type { NutrientId } from '@/data/types'
 import { createClient } from '@/lib/supabase/client'
 import { useSafeTransition } from '@/lib/useSafeTransition'
@@ -60,6 +61,16 @@ export function FoodDiary({
   const t = useTranslations('eat')
   const opt = useTranslations('onboarding.options')
   const locale = useLocale()
+  const en = locale === 'en'
+  // foods and nutrients have English names in the data; logged entries keep the Czech title plus the food id
+  const foodName = (f: { name: string; nameEn: string }) => (en ? f.nameEn || f.name : f.name)
+  const rowName = (title: string) => {
+    const [name, slug] = title.split('|')
+    const f = en && slug ? foodById(slug) : undefined
+    return f ? foodName(f) : name
+  }
+  const nutrientName = (id: NutrientId) =>
+    en ? ((PANEL_BY_KEY as Record<string, { en: string }>)[id]?.en ?? NUTRIENTS[id].name) : NUTRIENTS[id].name
   const router = useRouter()
   const [open, setOpen] = useState<Meal | null>(prefill?.meal ?? null)
   const [q, setQ] = useState(prefill?.name ?? '')
@@ -161,7 +172,7 @@ export function FoodDiary({
                   className="border-line flex items-center justify-between gap-3 border-t py-2 first:border-t-0"
                 >
                   <span className="min-w-0">
-                    <span className="block truncate text-[14.5px]">{r.title.split('|')[0]}</span>
+                    <span className="block truncate text-[14.5px]">{rowName(r.title)}</span>
                     <span className="text-subtle block font-mono text-[12.5px]">
                       {Number(r.grams)} g · {Math.round(Number(r.kcal))} kcal ·{' '}
                       {Number(r.protein_g).toLocaleString(locale === 'en' ? 'en' : 'cs-CZ', {
@@ -212,8 +223,8 @@ export function FoodDiary({
                         className="flex w-full items-center justify-between rounded-lg px-2 py-2 text-left hover:bg-white/[0.05]"
                       >
                         <span className="min-w-0">
-                          <span className="block truncate text-[14.5px]">{f.name}</span>
-                          <span className="text-subtle block truncate text-[12px]">{f.basis}</span>
+                          <span className="block truncate text-[14.5px]">{foodName(f)}</span>
+                          {!en && <span className="text-subtle block truncate text-[12px]">{f.basis}</span>}
                           {conflicts.length > 0 && (
                             <span
                               className="text-warn block text-[12px]"
@@ -255,7 +266,7 @@ export function FoodDiary({
             {micros.map((m) => (
               <li key={m.id}>
                 <div className="flex justify-between text-[14px]">
-                  <span>{NUTRIENTS[m.id].name}</span>
+                  <span>{nutrientName(m.id)}</span>
                   <span className={cx('font-mono text-[13px]', m.pct >= 100 ? 'text-bio' : 'text-muted')}>
                     {m.pct} %
                   </span>

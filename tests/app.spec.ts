@@ -219,3 +219,13 @@ test('supplements: a vegan in winter sees B12 as needed, vitamin D, iodine and o
   await expect(box.getByRole('listitem').first()).toContainText('B12')
   await expect(box.getByRole('link').first()).toHaveAttribute('href', /\/doplnky\/vitamin-b12$/)
 })
+
+test('food diary in English shows English food and nutrient names', async ({ page, context }) => {
+  await context.addCookies([{ name: 'blwb-locale', value: 'en', url: 'http://localhost:3100' }])
+  await page.goto('/preview/eat?add=almonds')
+  await expect(page.getByTestId('meal-breakfast')).toContainText('Rolled oats')
+  const lunch = page.getByTestId('meal-lunch')
+  await expect(lunch.getByRole('textbox').first()).toHaveValue('Almonds')
+  await expect(lunch.getByRole('button', { name: /Almonds/ }).first()).toBeVisible()
+  await expect(page.locator('main')).not.toContainText('Ovesné vločky')
+})
