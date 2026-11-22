@@ -1,3 +1,4 @@
+import { EXERCISE_BY_SLUG } from '@/data/exercises'
 import { RoutineList } from '@/components/mobility/RoutineList'
 import { rankRoutines } from '@/lib/pain/routine-fit'
 import { ProfileSuggestions } from '@/components/supplements/ProfileSuggestions'
@@ -14,7 +15,6 @@ import { PhotoJournal } from '@/components/body/PhotoJournal'
 import { Paywall } from '@/components/app/Paywall'
 import { exerciseProgress, weeklyVolume, type ProgressSet } from '@/lib/train/progress'
 import { PILLARS } from '@/data/looksmaxing'
-import { EVIDENCE } from '@/data/sources'
 import { CoachChat } from '@/components/coach/CoachChat'
 import { LabsClient } from '@/components/labs/LabsClient'
 import { notFound } from 'next/navigation'
@@ -117,7 +117,7 @@ export default async function Preview({
           exercises={[
             {
               slug: 'back-squat',
-              name: 'Dřep s velkou činkou',
+              name: EXERCISE_BY_SLUG['back-squat'].name[(await getLocale()) === 'en' ? 'en' : 'cs'],
               points: exerciseProgress(sets).get('back-squat')!,
             },
           ]}
@@ -177,7 +177,7 @@ export default async function Preview({
             id: p.id,
             title: p.title,
             howTo: p.howTo[0] ?? p.lead,
-            level: EVIDENCE[p.level].label,
+            level: p.level,
           }))}
         />
       )

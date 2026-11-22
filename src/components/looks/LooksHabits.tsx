@@ -10,7 +10,8 @@ export interface Habit {
   id: string
   title: string
   howTo: string
-  level: string
+  /** evidence level key (established / plausible / preliminary), translated here */
+  level: 'established' | 'plausible' | 'preliminary'
 }
 
 const KEY = 'blwb-looks-v1'
@@ -19,6 +20,7 @@ const today = () => new Date().toISOString().slice(0, 10)
 /** Daily checklist of the evidence-based looks habits. Stored on this device only (no health data). */
 export function LooksHabits({ habits }: { habits: Habit[] }) {
   const t = useTranslations('looks')
+  const ev = useTranslations('evidence')
   const [done, setDone] = useState<Record<string, string[]>>({})
   useEffect(() => {
     try {
@@ -94,7 +96,7 @@ export function LooksHabits({ habits }: { habits: Habit[] }) {
                   <span className="block text-[16px] font-medium">{h.title}</span>
                   <span className="text-muted mt-1 block text-[14px]">{h.howTo}</span>
                   <span className="text-subtle mt-1 block font-mono text-[11.5px] uppercase">
-                    {t('evidence')}: {h.level}
+                    {t('evidence')}: {ev(h.level)}
                   </span>
                 </span>
               </button>

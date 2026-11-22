@@ -1,7 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { requireAppUser } from '@/lib/auth'
 import { PILLARS } from '@/data/looksmaxing'
-import { EVIDENCE } from '@/data/sources'
 import { LooksHabits } from '@/components/looks/LooksHabits'
 
 export default async function LooksPage() {
@@ -11,7 +10,7 @@ export default async function LooksPage() {
     id: p.id,
     title: p.title,
     howTo: p.howTo[0] ?? p.lead,
-    level: EVIDENCE[p.level].label,
+    level: p.level,
   }))
   return (
     <div>
