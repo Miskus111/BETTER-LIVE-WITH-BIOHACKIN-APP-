@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.6.0 — Samostatná aplikace a profil všude (22. 11. 2026)
+
+- **Samostatný projekt:** aplikace má vlastní repozitář a nasazení; veřejné stránky (potraviny, průvodci, doplňky,
+  právní stránky) vedou na web. Sdílená data převezme `npm run sync:data`.
+- **Podle profilu:**
+  - Dnes: „Čtení pro vás“ — tři průvodci podle bolestí, cílů (v pořadí priority) a sportu;
+  - jídelníček: upozornění na alergie, stravu (vegan, vegetarián, pescetarián) a potraviny, které nejíte;
+  - trénink: šablony pro váš sport první, pak ty, které zvládnete s vaším vybavením („půjde 4 z 6 cviků“);
+  - mobilita: sestava pro sedavou práci a pro váš sport označené „pro vás“;
+  - doplňky: B12 pro vegany a vegetariány, vitamín D v zimě, jód a omega-3 z řas bez mléka a ryb.
+- **Přihlášení:** obnova a změna hesla, zobrazení hesla, opětovné poslání e-mailu, chyby v češtině.
+
 ## 0.5.0 — Phases 2–8 (branch `blwb-app`)
 
 - **Train:** 179-exercise library with filters, 7 templates, offline-first workout logger (kg/lb, set types, RPE,
