@@ -48,6 +48,8 @@ test('pain map red flags block the exercise plan', async ({ page }) => {
   // the report can't be stored in the preview (no signed-in user / database): the warning must stay on screen
   await page.waitForTimeout(1500)
   await expect(page.getByTestId('gate-emergency')).toBeVisible()
+  // …and says honestly that it wasn't stored
+  await expect(page.getByTestId('pain-save-failed')).toBeVisible()
 })
 
 test('pain map without red flags shows education and a plan', async ({ page }) => {
