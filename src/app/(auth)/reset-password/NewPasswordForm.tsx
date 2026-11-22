@@ -4,9 +4,11 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { PasswordInput } from '@/components/ui/PasswordInput'
 import { authErrorKey } from '@/lib/supabase/auth-errors'
+
+/** The Supabase client (~66 KB) loads on the first submit, not with the page — the form appears faster on phones. */
+const supabaseClient = () => import('@/lib/supabase/client').then((m) => m.createClient())
 
 export function NewPasswordForm() {
   const t = useTranslations('auth')
@@ -29,7 +31,7 @@ export function NewPasswordForm() {
       return
     }
     setStatus('loading')
-    const { error } = await createClient().auth.updateUser({ password })
+    const { error } = await (await supabaseClient()).auth.updateUser({ password })
     if (error) {
       setStatus('error')
       setMessage(t(authErrorKey(error) ?? 'resetError'))

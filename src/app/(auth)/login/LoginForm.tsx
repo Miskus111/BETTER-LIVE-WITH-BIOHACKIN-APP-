@@ -5,9 +5,11 @@ import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Loader2, MailCheck } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
 import { PasswordInput } from '@/components/ui/PasswordInput'
 import { authErrorKey } from '@/lib/supabase/auth-errors'
+
+/** The Supabase client (~66 KB) loads on the first submit, not with the page — the form appears faster on phones. */
+const supabaseClient = () => import('@/lib/supabase/client').then((m) => m.createClient())
 
 export function LoginForm({
   next,
@@ -46,7 +48,7 @@ export function LoginForm({
     // a message from an earlier failed attempt must not show up on the next screen
     setMessage('')
     setResent(false)
-    const supabase = createClient()
+    const supabase = await supabaseClient()
     if (mode === 'reset') {
       // same answer whether or not the account exists (no account enumeration)
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -94,7 +96,7 @@ export function LoginForm({
   }
 
   const resend = async () => {
-    const supabase = createClient()
+    const supabase = await supabaseClient()
     const { error } =
       mode === 'reset'
         ? await supabase.auth.resetPasswordForEmail(email, { redirectTo: callback('/reset-password') })
@@ -109,7 +111,7 @@ export function LoginForm({
   }
 
   const google = async () => {
-    const supabase = createClient()
+    const supabase = await supabaseClient()
     await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: callback(next) } })
   }
 

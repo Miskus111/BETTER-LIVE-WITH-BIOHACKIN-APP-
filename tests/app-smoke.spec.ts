@@ -146,7 +146,7 @@ test('a deep link keeps its query through the login redirect (food from the webs
 test('JavaScript budget: login and the screens bundle stay light (gzip)', async ({ request }) => {
   // ~10 % above the sizes measured on 22 Nov 2026. All previews share one page that bundles every screen, so
   // that number is a ceiling for the whole app; a jump usually means a large data file reached the browser.
-  const budget: Record<string, number> = { '/login': 295, '/preview/today': 610 }
+  const budget: Record<string, number> = { '/login': 225, '/preview/today': 610 }
   for (const [path, maxKb] of Object.entries(budget)) {
     const html = await (await request.get(path)).text()
     const srcs = [...new Set([...html.matchAll(/src="(\/_next\/static\/[^"]+\.js)"/g)].map((m) => m[1]))]
