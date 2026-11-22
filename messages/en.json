@@ -18,7 +18,11 @@
     "educational": "Educational content, not medical advice.",
     "offlineTitle": "You are offline",
     "offlineBody": "This page is not saved on this device yet. You can still log workouts without a connection — they upload once you are back online.",
-    "offlineTrain": "Open training"
+    "offlineTrain": "Open training",
+    "errorTitle": "Something went wrong.",
+    "errorBody": "It may be a dropped connection. Your saved data is safe — please try again.",
+    "retry": "Try again",
+    "backToToday": "Back to Today"
   },
   "nav": {
     "today": "Today",
