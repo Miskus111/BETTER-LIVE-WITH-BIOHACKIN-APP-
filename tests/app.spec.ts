@@ -195,3 +195,24 @@ test('today: strong recent pain gets its own tip; reading follows pain, goals an
   await expect(reading).toHaveCount(3)
   await expect(reading.first()).toContainText('Bolest zad')
 })
+
+test('mobility: routines that suit the profile come first and are marked', async ({ page }) => {
+  // preview person: desk job, lower back pain, runs
+  await page.goto('/preview/mobility')
+  const items = page.locator('[data-testid^="routine-"]')
+  await expect(items.nth(0)).toHaveAttribute('data-testid', 'routine-desk')
+  await expect(items.nth(1)).toHaveAttribute('data-testid', 'routine-runners')
+  await expect(items.nth(0)).toContainText('Pro vás')
+  await expect(items.nth(2)).not.toContainText('Pro vás')
+})
+
+test('supplements: a vegan in winter sees B12 as needed, vitamin D, iodine and omega-3 to consider', async ({
+  page,
+}) => {
+  await page.goto('/preview/supplements')
+  const box = page.getByTestId('supp-suggestions')
+  await expect(box.getByRole('listitem')).toHaveCount(4)
+  await expect(box.getByRole('listitem').first()).toContainText('Nutné')
+  await expect(box.getByRole('listitem').first()).toContainText('B12')
+  await expect(box.getByRole('link').first()).toHaveAttribute('href', /\/doplnky\/vitamin-b12$/)
+})

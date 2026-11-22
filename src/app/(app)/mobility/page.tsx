@@ -1,11 +1,11 @@
-import Link from '@/components/ui/Link'
-import { getLocale, getTranslations } from 'next-intl/server'
-import { HeartPulse, Play } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
+import { HeartPulse } from 'lucide-react'
 import { requireAppUser } from '@/lib/auth'
 import { ROUTINES } from '@/data/mobility'
 import type { Region } from '@/lib/pain/red-flags'
 import { PainMap } from '@/components/mobility/PainMap'
 import { PainChart } from '@/components/mobility/PainChart'
+import { RoutineList } from '@/components/mobility/RoutineList'
 import { rankRoutines } from '@/lib/pain/routine-fit'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -13,7 +13,6 @@ type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint
 export default async function MobilityPage() {
   const { supabase, user } = await requireAppUser()
   const t = await getTranslations('mob')
-  const locale = (await getLocale()) as 'cs' | 'en'
   const db = supabase as unknown as Db
   const [{ data }, { data: prefs }] = await Promise.all([
     db.from('pain_reports').select('region, score, reported_at, red_flags').order('reported_at').limit(500),
@@ -44,28 +43,7 @@ export default async function MobilityPage() {
         </a>
       </div>
 
-      <section>
-        <h2 className="eyebrow mb-4">{t('routines')}</h2>
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {routines.map((r) => (
-            <li key={r.id} data-testid={`routine-${r.id}`}>
-              <Link
-                href={`/mobility/routine/${r.id}`}
-                className="card hover:border-cyan/40 flex h-full items-center justify-between gap-3 p-4"
-              >
-                <span>
-                  <span className="block text-[15.5px] font-medium">{r.name[locale]}</span>
-                  {forYou.has(r.id) && <span className="text-bio block text-[12.5px]">{t('forYou')}</span>}
-                  <span className="text-subtle font-mono text-[12.5px]">
-                    {r.minutes} {t('min')} · {t('exercisesCount', { n: r.items.length })}
-                  </span>
-                </span>
-                <Play size={18} className="text-cyan shrink-0" aria-hidden />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <RoutineList routines={routines} forYou={forYou} />
 
       <section id="pain">
         <h2 className="eyebrow mb-4">{t('pain')}</h2>

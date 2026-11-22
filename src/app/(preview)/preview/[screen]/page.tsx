@@ -1,3 +1,7 @@
+import { RoutineList } from '@/components/mobility/RoutineList'
+import { rankRoutines } from '@/lib/pain/routine-fit'
+import { ProfileSuggestions } from '@/components/supplements/ProfileSuggestions'
+import { profileSuggestions } from '@/lib/supplements/suggestions'
 import { TodayView } from '@/components/today/TodayView'
 import { readingFor } from '@/lib/today/reading'
 import { todayTip } from '@/lib/today/tip'
@@ -250,6 +254,23 @@ export default async function Preview({
           ]}
         />
       )
+    case 'mobility': {
+      // sample person: desk job, lower back pain, runs
+      const { routines, forYou } = rankRoutines(ROUTINES, {
+        sports: ['running'],
+        workPattern: 'desk',
+        painAreas: ['lower_back'],
+      })
+      return <RoutineList routines={routines} forYou={forYou} />
+    }
+    case 'supplements': {
+      // sample person: vegan, in November, nothing in the stack yet
+      return (
+        <ProfileSuggestions
+          suggestions={profileSuggestions({ diet: 'vegan', allergies: [], month: 11, stack: [] })}
+        />
+      )
+    }
     case 'today': {
       // sample person: weight loss first, then muscle; lower back pain 7/10 reported yesterday; runs
       const tt = await getTranslations('today')
