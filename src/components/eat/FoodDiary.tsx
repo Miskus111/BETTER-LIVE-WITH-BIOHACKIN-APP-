@@ -29,6 +29,16 @@ export interface LogRow {
   food_slug?: string | null
 }
 const MEALS: Meal[] = ['breakfast', 'lunch', 'dinner', 'snack']
+
+/** The meal a food logged right now most likely belongs to, by the hour in Prague (servers run on UTC). */
+export function mealNow(d: Date): Meal {
+  const h = Number(
+    new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Prague' }).format(
+      d,
+    ),
+  )
+  return h < 10 ? 'breakfast' : h < 15 ? 'lunch' : h >= 17 && h < 21 ? 'dinner' : 'snack'
+}
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 const NO_PROFILE: DietProfile = { diet: null, allergies: [], dislikes: [] }
@@ -37,18 +47,21 @@ export function FoodDiary({
   rows,
   day,
   profile = NO_PROFILE,
+  prefill,
 }: {
   rows: LogRow[]
   day: string
   /** allergies, diet and dislikes from onboarding: matching foods get a warning and go last */
   profile?: DietProfile
+  /** open this meal with the search already filled in (link from the website) */
+  prefill?: { name: string; meal: Meal }
 }) {
   const t = useTranslations('eat')
   const opt = useTranslations('onboarding.options')
   const locale = useLocale()
   const router = useRouter()
-  const [open, setOpen] = useState<Meal | null>(null)
-  const [q, setQ] = useState('')
+  const [open, setOpen] = useState<Meal | null>(prefill?.meal ?? null)
+  const [q, setQ] = useState(prefill?.name ?? '')
   // empty = the food's default household portion
   const [grams, setGrams] = useState('')
   const [pending, start] = useTransition()

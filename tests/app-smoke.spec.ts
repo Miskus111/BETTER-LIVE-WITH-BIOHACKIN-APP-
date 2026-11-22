@@ -123,3 +123,12 @@ test('public pages are sent to the website; the app itself is not indexed', asyn
   }
   expect(await (await request.get('/robots.txt')).text()).toContain('Disallow: /')
 })
+
+test('a deep link keeps its query through the login redirect (food from the website → diary)', async ({
+  request,
+}) => {
+  const res = await request.get('/eat?add=almonds', { maxRedirects: 0 })
+  // without Supabase keys (CI) the app shows a setup screen instead of redirecting
+  test.skip(res.status() !== 307, 'Supabase not configured')
+  expect(res.headers()['location']).toContain(`next=${encodeURIComponent('/eat?add=almonds')}`)
+})

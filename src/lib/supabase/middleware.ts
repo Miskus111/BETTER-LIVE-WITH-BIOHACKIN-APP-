@@ -43,7 +43,8 @@ export async function updateSession(request: NextRequest) {
   if (!user && isAppPath(path)) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
-    url.search = `?next=${encodeURIComponent(path)}`
+    // keep the query too (e.g. /eat?add=almonds from the website) so login returns to the same place
+    url.search = `?next=${encodeURIComponent(path + request.nextUrl.search)}`
     return NextResponse.redirect(url)
   }
   if (user && path === '/login') {
