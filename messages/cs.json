@@ -272,7 +272,8 @@
     "ofKcal": "z {target} kcal",
     "readingTitle": "Čtení pro vás",
     "readingHint": "Vybrané podle vašich cílů, bolestí a sportu z profilu.",
-    "readingMinutes": "{n} min čtení"
+    "readingMinutes": "{n} min čtení",
+    "tipPain": "Naposledy jste hlásili bolest {score}/10 ({region}). Dnes vynechte zátěž, která ji zhoršuje, a projděte mapu bolesti v Mobilitě. Při zhoršení nebo varovných příznacích jděte k lékaři."
   },
   "settings": {
     "title": "Nastavení",

@@ -272,7 +272,8 @@
     "ofKcal": "of {target} kcal",
     "readingTitle": "Reading for you",
     "readingHint": "Picked from the goals, pain areas and sports in your profile (articles in Czech).",
-    "readingMinutes": "{n} min read"
+    "readingMinutes": "{n} min read",
+    "tipPain": "Your last pain report was {score}/10 ({region}). Today skip loads that make it worse and go through the pain map in Mobility. If it gets worse or you notice warning signs, see a doctor."
   },
   "settings": {
     "title": "Settings",

@@ -7,6 +7,7 @@ import { CheckIn } from '@/components/today/CheckIn'
 import { cx } from '@/lib/format'
 import { trendChange, withTrend } from '@/lib/body/weight'
 import { readingFor, readingMinutes } from '@/lib/today/reading'
+import { todayTip } from '@/lib/today/tip'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 const iso = (d: Date) => d.toISOString().slice(0, 10)
@@ -110,18 +111,39 @@ export default async function TodayPage() {
     sports: prefs.data?.sports ?? [],
   })
 
-  // one practical nudge, most important first
-  const hour = now.getHours()
+  // one practical nudge, most important first (hour in Prague: servers run on UTC)
+  const hour = Number(
+    new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Prague' }).format(
+      now,
+    ),
+  )
+  const lastPainAt = (pain.data ?? [])[0]?.reported_at as string | undefined
+  const tipChoice = todayTip({
+    outOfRange,
+    sleepMin: sl?.duration_min ?? null,
+    hour,
+    protein,
+    proteinTarget: tk?.proteinG ?? null,
+    workouts: workouts.length,
+    trainingDays,
+    weekday: now.getDay(),
+    pain: lastPain
+      ? { ...lastPain, ageDays: lastPainAt ? (now.getTime() - new Date(lastPainAt).getTime()) / 864e5 : 99 }
+      : null,
+  })
   const tip =
-    outOfRange > 0
-      ? t('tipLabs', { n: outOfRange })
-      : sl?.duration_min !== undefined && sl?.duration_min !== null && sl.duration_min < 360
-        ? t('tipSleep')
-        : tk && hour >= 15 && protein < tk.proteinG * 0.5
-          ? t('tipProtein', { left: Math.round(tk.proteinG - protein) })
-          : workouts.length < trainingDays && now.getDay() !== 0
-            ? t('tipTrain', { done: workouts.length, plan: trainingDays })
-            : t('tipDefault')
+    tipChoice.key === 'tipPain'
+      ? t('tipPain', {
+          score: tipChoice.score,
+          region: mob(`regions.${tipChoice.region}` as 'regions.neck').toLowerCase(),
+        })
+      : tipChoice.key === 'tipLabs'
+        ? t('tipLabs', { n: tipChoice.n })
+        : tipChoice.key === 'tipProtein'
+          ? t('tipProtein', { left: tipChoice.left })
+          : tipChoice.key === 'tipTrain'
+            ? t('tipTrain', { done: tipChoice.done, plan: tipChoice.plan })
+            : t(tipChoice.key)
 
   const cards = [
     {
