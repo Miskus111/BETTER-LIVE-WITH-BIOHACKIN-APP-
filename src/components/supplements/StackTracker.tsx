@@ -3,11 +3,12 @@
 import Link from '@/components/ui/Link'
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState } from 'react'
 import { AlertTriangle, Check, Clock, Plus, ShieldAlert, Stethoscope, Trash2 } from 'lucide-react'
 import { SUPPLEMENTS, SUPPLEMENT_BY_ID, type SupplementId } from '@/data/supplement-library'
 import { checkStack, type Condition, type SafetyIssue } from '@/lib/supplements/safety'
 import { createClient } from '@/lib/supabase/client'
+import { useSafeTransition } from '@/lib/useSafeTransition'
 import { EVIDENCE } from '@/data/sources'
 import { cx } from '@/lib/format'
 
@@ -37,12 +38,12 @@ export function StackTracker({ rows, medications }: { rows: StackRow[]; medicati
   const ev = useTranslations('evidence')
   const locale = useLocale() as 'cs' | 'en'
   const router = useRouter()
-  const [pending, start] = useTransition()
   const [adding, setAdding] = useState<SupplementId | null>(null)
   const [dose, setDose] = useState('')
   const [timing, setTiming] = useState('')
   const [reminder, setReminder] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [pending, start] = useSafeTransition(() => setError(t('saveError')))
   const [conditions, setConditions] = useState<Condition[]>([])
   useEffect(() => {
     try {

@@ -2,11 +2,12 @@
 
 import Link from '@/components/ui/Link'
 import { useLocale, useTranslations } from 'next-intl'
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { AlertOctagon, CheckCircle2, Phone, Stethoscope } from 'lucide-react'
 import { EDUCATION, MOBILITY_BY_SLUG, REGION_PLAN } from '@/data/mobility'
 import { FLAGS_BY_REGION, triage, type RedFlag, type Region } from '@/lib/pain/red-flags'
 import { createClient } from '@/lib/supabase/client'
+import { useSafeTransition } from '@/lib/useSafeTransition'
 import { cx } from '@/lib/format'
 
 type Step = 'score' | 'flags' | 'gate' | 'questions' | 'plan'
@@ -38,7 +39,9 @@ export function PainFlow({ region }: { region: Region }) {
     load: null as boolean | null,
   })
   const [saved, setSaved] = useState(false)
-  const [pending, start] = useTransition()
+  const [saveFailed, setSaveFailed] = useState(false)
+  // a failed save must never hide the safety message — it only says the report wasn't stored
+  const [pending, start] = useSafeTransition(() => setSaveFailed(true))
   const questions = FLAGS_BY_REGION[region]
   const result = triage(flags)
 
@@ -49,6 +52,7 @@ export function PainFlow({ region }: { region: Region }) {
         .from('pain_reports')
         .insert({ region, score, answers: a, red_flags: redFlags })
       if (!error) setSaved(true)
+      else setSaveFailed(true)
     })
 
   const toggle = (k: 'better' | 'worse', v: string) =>
@@ -165,6 +169,12 @@ export function PainFlow({ region }: { region: Region }) {
             </a>
           )}
         </section>
+      )}
+
+      {saveFailed && (
+        <p className="text-warn mt-3 text-[13.5px]" role="status" data-testid="pain-save-failed">
+          {t('saveError')}
+        </p>
       )}
 
       {step === 'questions' && (

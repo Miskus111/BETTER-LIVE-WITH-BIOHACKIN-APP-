@@ -603,7 +603,8 @@
     },
     "painJump": "Something hurts? Tap the spot on the body map for a safe plan.",
     "exercisesCount": "{n, plural, one {# exercise} other {# exercises}}",
-    "forYou": "For you — from your profile"
+    "forYou": "For you — from your profile",
+    "saveError": "The report couldn't be saved (check your connection). The advice above still applies."
   },
   "labs": {
     "title": "Labs",

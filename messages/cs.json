@@ -603,7 +603,8 @@
     },
     "painJump": "Něco vás bolí? Klepněte na místo na těle a dostanete bezpečný plán.",
     "exercisesCount": "{n, plural, one {# cvik} few {# cviky} other {# cviků}}",
-    "forYou": "Pro vás — podle profilu"
+    "forYou": "Pro vás — podle profilu",
+    "saveError": "Záznam se nepodařilo uložit (zkontrolujte připojení). Rada výše ale platí."
   },
   "labs": {
     "title": "Laboratoř",
