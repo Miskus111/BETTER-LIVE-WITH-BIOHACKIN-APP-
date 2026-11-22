@@ -184,3 +184,14 @@ test('the diary opens with a food from a deep link already searched', async ({ p
   await expect(lunch.getByRole('textbox').first()).toHaveValue('Mandle')
   await expect(lunch.getByRole('button', { name: /Mandle/ }).first()).toBeVisible()
 })
+
+test('today: strong recent pain gets its own tip; reading follows pain, goals and sport', async ({
+  page,
+}) => {
+  // preview person: weight loss then muscle, lower back pain 7/10 yesterday, runs
+  await page.goto('/preview/today')
+  await expect(page.getByTestId('today-tip')).toContainText('7/10')
+  const reading = page.getByTestId('today-reading').getByRole('link')
+  await expect(reading).toHaveCount(3)
+  await expect(reading.first()).toContainText('Bolest zad')
+})

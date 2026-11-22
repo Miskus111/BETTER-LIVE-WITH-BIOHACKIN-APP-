@@ -89,6 +89,7 @@ test('accessibility: no serious or critical axe violations on app screens, login
     '/login',
     '/reset-password',
     '/preview/eat?add=almonds',
+    '/preview/today',
     ...screens.map((s) => `/preview/${s}`),
   ]) {
     await page.goto(path)

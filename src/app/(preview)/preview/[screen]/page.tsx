@@ -1,3 +1,8 @@
+import { TodayView } from '@/components/today/TodayView'
+import { readingFor } from '@/lib/today/reading'
+import { todayTip } from '@/lib/today/tip'
+import { getTranslations } from 'next-intl/server'
+import { Apple, Dumbbell } from 'lucide-react'
 import { LooksHabits } from '@/components/looks/LooksHabits'
 import { ProgressCharts } from '@/components/train/ProgressCharts'
 import { WeightTracker } from '@/components/body/WeightTracker'
@@ -245,6 +250,60 @@ export default async function Preview({
           ]}
         />
       )
+    case 'today': {
+      // sample person: weight loss first, then muscle; lower back pain 7/10 reported yesterday; runs
+      const tt = await getTranslations('today')
+      const mob = await getTranslations('mob')
+      const tip = todayTip({
+        outOfRange: 0,
+        sleepMin: 420,
+        hour: 9,
+        protein: 0,
+        proteinTarget: 140,
+        workouts: 1,
+        trainingDays: 3,
+        weekday: 3,
+        pain: { score: 7, region: 'lower_back', ageDays: 1 },
+      })
+      return (
+        <TodayView
+          name="Jana"
+          tip={
+            tip.key === 'tipPain'
+              ? tt('tipPain', {
+                  score: tip.score,
+                  region: mob(`regions.${tip.region}` as 'regions.neck').toLowerCase(),
+                })
+              : tt('tipDefault')
+          }
+          cards={[
+            { href: '/train', icon: Dumbbell, label: tt('workout'), value: '1 / 3', unit: tt('thisWeek') },
+            {
+              href: '/eat',
+              icon: Apple,
+              label: tt('meals'),
+              value: '640',
+              unit: tt('ofKcal', { target: 1900 }),
+            },
+          ]}
+          reading={readingFor({
+            goals: ['fat_loss', 'muscle'],
+            painAreas: ['lower_back'],
+            sports: ['running'],
+          })}
+          today="2026-11-22"
+          checkIn={{
+            sleep_hours: 7,
+            sleep_quality: 4,
+            steps: null,
+            water_ml: null,
+            hrv_ms: null,
+            resting_hr: null,
+            stress: null,
+          }}
+        />
+      )
+    }
     case 'eat': {
       const t = targetsFor({
         sex: 'male',
