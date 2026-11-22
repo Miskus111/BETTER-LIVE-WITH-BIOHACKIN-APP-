@@ -235,3 +235,40 @@ ok(leaks.length === 0, `every user table isolated between users (${iso.length - 
   await db.exec('reset role;')
   ok(other === 0 && own === 1, 'profiles: own profile visible, others not')
 }
+
+// --- private files (progress photos, lab reports): only files under "<own user id>/…" are readable or writable
+{
+  await db.exec(
+    'grant select, insert, delete on storage.objects to authenticated; grant usage on schema storage to authenticated;',
+  )
+  const [a, b] = (
+    await db.query(
+      `select id from auth.users where email in ('a@example.test','b@example.test') order by email`,
+    )
+  ).rows.map((r) => r.id)
+  const buckets = (
+    await db.query(`select id, public from storage.buckets where id in ('progress-photos','lab-reports')`)
+  ).rows
+  ok(buckets.length === 2 && buckets.every((x) => !x.public), 'photo and lab buckets exist and are private')
+  await db.exec(
+    `insert into storage.objects (bucket_id, name) values ('progress-photos', '${b}/front.jpg'), ('lab-reports', '${b}/report.pdf'), ('progress-photos', '${a}/front.jpg')`,
+  )
+  await db.exec(`set role authenticated; select set_config('request.jwt.claim.sub', '${a}', false);`)
+  const visible = (await db.query(`select name from storage.objects`)).rows.map((r) => r.name)
+  let wroteForOther = true
+  try {
+    await db.exec(
+      `insert into storage.objects (bucket_id, name) values ('progress-photos', '${b}/planted.jpg')`,
+    )
+  } catch {
+    wroteForOther = false
+  }
+  const deleted = (await db.query(`delete from storage.objects where name like '${b}/%' returning 1`)).rows
+    .length
+  await db.exec('reset role;')
+  ok(
+    visible.length === 1 && visible[0] === `${a}/front.jpg`,
+    'files: a user sees only their own photos and lab reports',
+  )
+  ok(!wroteForOther && deleted === 0, "files: a user can't upload into or delete from someone else's folder")
+}
