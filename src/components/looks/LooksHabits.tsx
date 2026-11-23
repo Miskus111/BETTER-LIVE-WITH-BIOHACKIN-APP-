@@ -15,7 +15,10 @@ export interface Habit {
 }
 
 const KEY = 'blwb-looks-v1'
-const today = () => new Date().toISOString().slice(0, 10)
+/** The device's local calendar day (YYYY-MM-DD) — UTC would move ticks made after midnight to the previous day. */
+export const localDay = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+const today = () => localDay(new Date())
 
 /** Daily checklist of the evidence-based looks habits. Stored on this device only (no health data). */
 export function LooksHabits({ habits }: { habits: Habit[] }) {
@@ -54,7 +57,7 @@ export function LooksHabits({ habits }: { habits: Habit[] }) {
     let n = 0
     const day = new Date()
     for (;;) {
-      const k = day.toISOString().slice(0, 10)
+      const k = localDay(day)
       if ((done[k]?.length ?? 0) >= Math.ceil(habits.length / 2)) n++
       else if (k !== d) break
       day.setDate(day.getDate() - 1)

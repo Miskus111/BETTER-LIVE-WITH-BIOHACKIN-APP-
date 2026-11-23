@@ -1,3 +1,4 @@
+import { dayBefore, pragueDay } from '@/lib/dates'
 import Link from '@/components/ui/Link'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { requireAppUser } from '@/lib/auth'
@@ -15,7 +16,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
   const { supabase, profile, user } = await requireAppUser()
   const db = supabase as unknown as Db
   const t = await getTranslations('eat')
-  const day = new Date().toISOString().slice(0, 10)
+  const day = pragueDay(new Date())
   const [{ data: prefs }, { data: goals }, { data: logs }, { data: weekLogs }] = await Promise.all([
     db
       .from('preferences')
@@ -31,7 +32,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
     db
       .from('food_logs')
       .select('logged_on, kcal, protein_g')
-      .gte('logged_on', new Date(Date.parse(day) - 7 * 864e5).toISOString().slice(0, 10))
+      .gte('logged_on', dayBefore(day, 7))
       .lt('logged_on', day),
   ])
   const rows = (logs ?? []) as LogRow[]

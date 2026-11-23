@@ -1,3 +1,4 @@
+import { pragueDay } from '@/lib/dates'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
@@ -122,7 +123,7 @@ export async function POST(req: Request) {
     { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
     {
       type: 'text',
-      text: `Today is ${new Date().toISOString().slice(0, 10)}. App language: ${locale}.${screen === 'eating' ? `\n\n${EATING_INSTRUCTION}` : ''}`,
+      text: `Today is ${pragueDay(new Date())}. App language: ${locale}.${screen === 'eating' ? `\n\n${EATING_INSTRUCTION}` : ''}`,
     },
   ]
 

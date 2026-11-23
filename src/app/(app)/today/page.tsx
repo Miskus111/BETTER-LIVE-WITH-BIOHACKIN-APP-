@@ -1,3 +1,4 @@
+import { dayBefore, pragueDay } from '@/lib/dates'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Activity, Apple, Bed, Dumbbell, FlaskConical, Gauge, Pill, Scale } from 'lucide-react'
 import { requireAppUser } from '@/lib/auth'
@@ -19,8 +20,9 @@ export default async function TodayPage() {
   const mob = await getTranslations('mob')
 
   const now = new Date()
-  const today = iso(now)
-  const yesterday = iso(new Date(now.getTime() - 864e5))
+  // calendar days in Prague (the server runs on UTC)
+  const today = pragueDay(now)
+  const yesterday = dayBefore(today, 1)
   const weekStart = new Date(now)
   weekStart.setDate(now.getDate() - ((now.getDay() + 6) % 7))
   weekStart.setHours(0, 0, 0, 0)
@@ -67,14 +69,11 @@ export default async function TodayPage() {
         .gte('measured_at', iso(new Date(now.getTime() - 60 * 864e5)))
         .order('measured_at'),
       // two weeks of check-ins for the weekly overview
-      db
-        .from('sleep_logs')
-        .select('night_of, duration_min')
-        .gte('night_of', iso(new Date(now.getTime() - 14 * 864e5))),
+      db.from('sleep_logs').select('night_of, duration_min').gte('night_of', dayBefore(today, 14)),
       db
         .from('recovery_logs')
         .select('logged_on, steps, water_ml, resting_hr')
-        .gte('logged_on', iso(new Date(now.getTime() - 13 * 864e5))),
+        .gte('logged_on', dayBefore(today, 13)),
     ],
   )
 
