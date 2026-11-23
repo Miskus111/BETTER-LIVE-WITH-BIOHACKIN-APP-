@@ -531,7 +531,8 @@
     "whyB12Vegetarian": "Milk and eggs provide little of it; B12 deficiency is common in vegetarians.",
     "whyIodineVegan": "Without dairy and fish, iodised salt is the main iodine source. Without it, intake is often low.",
     "whyOmega3NoFish": "Without fish, long-chain omega-3 (EPA and DHA) is missing. Plant ALA converts poorly; an algae supplement exists.",
-    "whyVitDWinter": "From October to March the skin makes almost no vitamin D at Central European latitudes."
+    "whyVitDWinter": "From October to March the skin makes almost no vitamin D at Central European latitudes.",
+    "weekTaken": "Last 7 days: taken {n} of 7"
   },
   "evidence": {
     "established": "Established",

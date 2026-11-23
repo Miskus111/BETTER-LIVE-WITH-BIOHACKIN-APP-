@@ -83,6 +83,7 @@ export default async function Preview({
               timing: 'S večeří',
               reminder_time: '19:00:00',
               takenToday: true,
+              week: [true, true, false, true, true, true, true],
             },
             {
               id: 'b',
@@ -91,6 +92,7 @@ export default async function Preview({
               timing: 'Ráno',
               reminder_time: null,
               takenToday: false,
+              week: [true, false, false, true, false, false, false],
             },
           ]}
         />

@@ -4,6 +4,7 @@ import { StackTracker, type StackRow } from '@/components/supplements/StackTrack
 import { ProfileSuggestions } from '@/components/supplements/ProfileSuggestions'
 import type { SupplementId } from '@/data/supplement-library'
 import { profileSuggestions } from '@/lib/supplements/suggestions'
+import { lastSevenDays } from '@/lib/supplements/adherence'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -13,13 +14,17 @@ export default async function SupplementsPage() {
   const t = await getTranslations('supp')
   const since = new Date()
   since.setHours(0, 0, 0, 0)
-  const [{ data: stack }, { data: logs }, { data: prefs }] = await Promise.all([
+  const [{ data: stack }, { data: logs }, { data: weekLogs }, { data: prefs }] = await Promise.all([
     db
       .from('user_supplements')
       .select('id, dose_amount, timing, reminder_time, supplements(slug)')
       .eq('active', true)
       .order('created_at'),
     db.from('supplement_logs').select('user_supplement_id').gte('taken_at', since.toISOString()),
+    db
+      .from('supplement_logs')
+      .select('user_supplement_id, taken_at')
+      .gte('taken_at', new Date(since.getTime() - 7 * 864e5).toISOString()),
     db.from('preferences').select('medications, diet_type, allergies').eq('user_id', user.id).maybeSingle(),
   ])
   const taken = new Set((logs ?? []).map((l: { user_supplement_id: string }) => l.user_supplement_id))
@@ -39,6 +44,12 @@ export default async function SupplementsPage() {
       takenToday: taken.has(r.id),
     }),
   )
+  const history = lastSevenDays(
+    weekLogs ?? [],
+    rows.map((r) => r.id),
+    new Date(),
+  )
+  for (const r of rows) r.week = history[r.id]
   const suggestions = profileSuggestions({
     diet: prefs?.diet_type ?? null,
     allergies: prefs?.allergies ?? [],

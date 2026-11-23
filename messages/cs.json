@@ -531,7 +531,8 @@
     "whyB12Vegetarian": "Z mléka a vajec ho bývá málo; u vegetariánů je nedostatek B12 častý.",
     "whyIodineVegan": "Bez mléčných výrobků a ryb je hlavním zdrojem jodu jodidovaná sůl. Kdo ji nepoužívá, má jodu často málo.",
     "whyOmega3NoFish": "Bez ryb chybí dlouhé omega-3 (EPA a DHA). Rostlinná ALA se na ně mění jen málo; existuje doplněk z řas.",
-    "whyVitDWinter": "Od října do března se v našich zeměpisných šířkách vitamín D v kůži téměř netvoří."
+    "whyVitDWinter": "Od října do března se v našich zeměpisných šířkách vitamín D v kůži téměř netvoří.",
+    "weekTaken": "Posledních 7 dní: užito {n} ze 7"
   },
   "evidence": {
     "established": "Prokázané",

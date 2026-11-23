@@ -19,6 +19,8 @@ export interface StackRow {
   timing: string | null
   reminder_time: string | null
   takenToday: boolean
+  /** taken on each of the last 7 days, oldest first; the last entry is today */
+  week?: boolean[]
 }
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -158,6 +160,14 @@ export function StackTracker({ rows, medications }: { rows: StackRow[]; medicati
                       {r.dose_amount} {s?.dose.unit} · {timingLabel(r.timing, s, locale)}
                       {r.reminder_time && ` · ${r.reminder_time.slice(0, 5)}`}
                     </p>
+                    {r.week && (
+                      <WeekDots
+                        days={[...r.week.slice(0, 6), r.takenToday]}
+                        label={t('weekTaken', {
+                          n: [...r.week.slice(0, 6), r.takenToday].filter(Boolean).length,
+                        })}
+                      />
+                    )}
                   </div>
                   <button
                     type="button"
@@ -351,4 +361,25 @@ function timingLabel(
   if (!s) return stored ?? ''
   if (!stored || stored === s.timing.cs || stored === s.timing.en) return s.timing[locale]
   return stored
+}
+
+/** Seven dots, oldest day first: filled when the supplement was taken that day. */
+function WeekDots({ days, label }: { days: boolean[]; label: string }) {
+  return (
+    <span
+      className="mt-1.5 flex items-center gap-1"
+      role="img"
+      aria-label={label}
+      title={label}
+      data-testid="supp-week"
+    >
+      {days.map((on, i) => (
+        <span
+          key={i}
+          className={cx('h-2 w-2 rounded-full', on ? 'bg-bio' : 'border-line border')}
+          aria-hidden
+        />
+      ))}
+    </span>
+  )
 }

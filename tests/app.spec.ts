@@ -235,3 +235,10 @@ test('food diary in English shows English food and nutrient names', async ({ pag
   await expect(lunch.getByRole('button', { name: /Almonds/ }).first()).toBeVisible()
   await expect(page.locator('main')).not.toContainText('Ovesné vločky')
 })
+
+test('supplements: each item shows the last 7 days as dots', async ({ page }) => {
+  await page.goto('/preview/stack')
+  const weeks = page.getByTestId('supp-week')
+  await expect(weeks.first()).toHaveAttribute('aria-label', /6 ze 7|6 of 7/)
+  await expect(weeks.nth(1)).toHaveAttribute('aria-label', /2 ze 7|2 of 7/)
+})
