@@ -1,6 +1,7 @@
 import { NUTRIENTS } from '@/data/nutrients'
 import type { Food, NutrientId } from '@/data/types'
 import { norm, stemSet, stems } from '@/lib/guide-search'
+import { foodAliases } from './aliases'
 import { amountOf, isSource, notRecommendedReason, pinchSized } from '@/lib/nutrition'
 
 /** Sortable measures: energy, macros and every nutrient with an amount per 100 g. */
@@ -79,7 +80,11 @@ export function matchesText(food: Food, q: string) {
   if (!words.length) return true
   let c = hayCache.get(food)
   if (!c) {
-    c = { hay: norm(`${food.name} ${food.nameEn} ${food.category} ${food.subcategory ?? ''} ${food.basis}`) }
+    c = {
+      hay: norm(
+        `${food.name} ${food.nameEn} ${food.category} ${food.subcategory ?? ''} ${food.basis} ${foodAliases(food)}`,
+      ),
+    }
     hayCache.set(food, c)
   }
   const entry = c
