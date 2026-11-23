@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.1 — Spolehlivost a angličtina (23. 11. 2026)
+
+- **Dnes:** tip dne bere v úvahu silnou nedávnou bolest (místo výzvy k tréninku).
+- **Spolehlivé ukládání:** výpadek připojení při ukládání (bolest, doplňky, jídelníček, onboarding, laboratoř,
+  check-in, váha) ukáže zprávu místo chybové stránky; varování mapy bolesti zůstane vždy vidět. Přívětivé chybové
+  obrazovky.
+- **Angličtina:** jídelníček ukazuje anglické názvy potravin a živin; úrovně důkazů v sekci Vzhled jsou přeložené.
+- **Přihlášení** o čtvrtinu lehčí (Supabase se načte až při odeslání).
+- **Testy databáze:** `npm run test:migrations` spustí všechny migrace na dočasném Postgresu a ověří zabezpečení,
+  registraci, limity AI a izolaci uživatelů ve všech tabulkách, souborech a knihovnách.
+- **Data:** nové potraviny a česká jídla z webu; týdenní kontrola, že sdílená data odpovídají webu
+  (`check:data-sync`). Návod k nasazení `docs/nasazeni.md`.
+
 ## 0.6.0 — Samostatná aplikace a profil všude (22. 11. 2026)
 
 - **Samostatný projekt:** aplikace má vlastní repozitář a nasazení; veřejné stránky (potraviny, průvodci, doplňky,
