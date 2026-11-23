@@ -1,3 +1,4 @@
+import { pragueDay } from '@/lib/dates'
 /**
  * Training progress over time: weekly volume and per-exercise estimated 1RM.
  * Pure functions; the history/progress pages feed them rows from workout_sets.
@@ -29,12 +30,9 @@ export interface ExercisePoint {
 
 const DAY = 864e5
 
-/** Calendar day in Czech time (YYYY-MM-DD) — an evening workout at 23:30 belongs to that day, not UTC's next. */
-export const localDay = (d: Date) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Prague' }).format(d)
-
 /** Monday of the (Czech-time) week containing `d`, as YYYY-MM-DD. */
 export function weekStart(d: Date): string {
-  const day0 = new Date(`${localDay(d)}T00:00:00Z`)
+  const day0 = new Date(`${pragueDay(d)}T00:00:00Z`)
   const dow = (day0.getUTCDay() + 6) % 7 // Monday = 0
   return new Date(day0.getTime() - dow * DAY).toISOString().slice(0, 10)
 }
@@ -72,7 +70,7 @@ export function exerciseProgress(sets: ProgressSet[]): Map<string, ExercisePoint
   const best = new Map<string, Map<string, ExercisePoint>>()
   for (const s of sets) {
     if (!working(s) || s.weightKg <= 0) continue
-    const date = s.date.length > 10 ? localDay(new Date(s.date)) : s.date
+    const date = s.date.length > 10 ? pragueDay(new Date(s.date)) : s.date
     const e1rm = estimate1RM(s.weightKg, s.reps).value
     const days = best.get(s.exercise) ?? new Map<string, ExercisePoint>()
     const cur = days.get(date)
