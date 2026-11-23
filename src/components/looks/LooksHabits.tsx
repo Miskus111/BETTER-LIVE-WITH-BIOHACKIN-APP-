@@ -1,5 +1,7 @@
 'use client'
 
+import { localDay } from '@/lib/dates'
+
 import Link from '@/components/ui/Link'
 import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
@@ -15,9 +17,6 @@ export interface Habit {
 }
 
 const KEY = 'blwb-looks-v1'
-/** The device's local calendar day (YYYY-MM-DD) — UTC would move ticks made after midnight to the previous day. */
-export const localDay = (d: Date) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 const today = () => localDay(new Date())
 
 /** Daily checklist of the evidence-based looks habits. Stored on this device only (no health data). */

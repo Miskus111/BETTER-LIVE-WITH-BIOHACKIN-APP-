@@ -15,3 +15,7 @@ export const pragueDay = (d: Date) =>
 /** The Prague calendar day `days` before `day` (plain date arithmetic, no time zone involved). */
 export const dayBefore = (day: string, days: number) =>
   new Date(Date.parse(`${day}T00:00:00Z`) - days * 864e5).toISOString().slice(0, 10)
+
+/** The device's local calendar day (YYYY-MM-DD) for browser code — UTC would move entries made after midnight to yesterday. */
+export const localDay = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`

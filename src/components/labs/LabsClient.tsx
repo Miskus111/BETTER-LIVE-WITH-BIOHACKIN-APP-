@@ -1,5 +1,7 @@
 'use client'
 
+import { localDay } from '@/lib/dates'
+
 import { useSafeTransition } from '@/lib/useSafeTransition'
 
 import { useLocale, useTranslations } from 'next-intl'
@@ -72,7 +74,7 @@ type Draft = {
   inbody: ExtractResponse['inbody']
 }
 
-const today = () => new Date().toISOString().slice(0, 10)
+const today = () => localDay(new Date())
 const n = (v: string) => (v.trim() === '' ? null : Number(v.replace(',', '.')))
 
 function Spark({ points }: { points: number[] }) {

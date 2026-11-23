@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { localDay } from './LooksHabits'
+import { localDay } from '@/lib/dates'
 
 describe('localDay', () => {
   it('uses the local calendar day, not UTC', () => {
