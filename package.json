@@ -19,7 +19,8 @@
     "check:db": "tsx --tsconfig scripts/tsconfig.json scripts/check-db.ts",
     "check": "npm run lint && npm run typecheck && npm test && npm run test:e2e",
     "sync:data": "tsx --tsconfig scripts/tsconfig.json scripts/sync-data.ts",
-    "test:migrations": "node scripts/test-migrations.mjs"
+    "test:migrations": "node scripts/test-migrations.mjs",
+    "check:data-sync": "tsx --tsconfig scripts/tsconfig.json scripts/check-data-sync.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",

@@ -22,6 +22,7 @@ npm run dev            # http://localhost:3000
 | `npm test`                | Vitest unit testy                                                                                                               |
 | `npm run test:e2e`        | Playwright: smoke testy + screenshoty 390/768/1440 (build do `.next-test`)                                                      |
 | `npm run sync:data`       | Převezme sdílená data (potraviny, doplňky, cviky, orgány) z checkoutu webu                                                      |
+| `npm run check:data-sync` | Ověří, že sdílená data odpovídají webu na GitHubu (běží i každé pondělí v CI)                                                   |
 | `npm run check:db`        | Produkční databáze má funkce z migrací a celou knihovnu cviků (čte `.env.local`)                                                |
 | `npm run test:rls`        | Test izolace RLS proti projektu Supabase                                                                                        |
 | `npm run test:migrations` | Všechny migrace na dočasném Postgresu (PGlite): zabezpečení, registrace, limity AI a izolace uživatelů (RLS) ve všech tabulkách |
