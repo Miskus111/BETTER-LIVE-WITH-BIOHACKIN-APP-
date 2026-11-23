@@ -3,6 +3,20 @@ import type { BodyGuide } from '@/data/body-guides'
 /** Lowercase and strip diacritics so "spanek" finds "spánek". */
 export const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 
+/**
+ * Rough Czech stems (text already without diacritics): the word without its ending vowels, and also without a
+ * mobile "e" before the last consonant — "palacinka", "palacinky" → "palacink"; "rizek", "rizky" → "rizk";
+ * "mleko", "mleka" → "mlek". Stems shorter than 4 letters are dropped (too vague to match on).
+ */
+export function stems(word: string): string[] {
+  const w = word.replace(/[aeiouy]+$/, '')
+  const out = /e[kc]$/.test(w) ? [w, w.slice(0, -2) + w.slice(-1)] : [w]
+  return out.filter((x) => x.length >= 4)
+}
+
+/** All stems of the words in an already-normalised text. */
+export const stemSet = (s: string) => new Set(s.split(/[^a-z0-9]+/).flatMap(stems))
+
 const cache = new WeakMap<BodyGuide, { title: string; lead: string; body: string }>()
 /** normalised text of a guide, computed once (search runs on every keystroke) */
 const fields = (g: BodyGuide) => {

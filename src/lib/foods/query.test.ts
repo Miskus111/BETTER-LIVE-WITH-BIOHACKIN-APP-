@@ -74,3 +74,15 @@ describe('sorting by a nutrient', () => {
     expect(b6).toContain('energy-drink')
   })
 })
+
+describe('food text search and Czech word endings', () => {
+  const names = (q: string) => FOODS.filter((f) => matchesText(f, q)).map((f) => f.name)
+  it('finds a food by another form of its name', () => {
+    expect(names('jablka')).toContain('Jablko')
+    expect(names('knedlíky')).toContain('Houskový knedlík')
+    expect(names('palačinka')).toContain('Palačinky (bez náplně)')
+  })
+  it('does not widen short words', () => {
+    expect(names('čaj').every((n) => n.toLowerCase().includes('čaj'))).toBe(true)
+  })
+})

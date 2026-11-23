@@ -1,6 +1,6 @@
 import { NUTRIENTS } from '@/data/nutrients'
 import type { Food, NutrientId } from '@/data/types'
-import { norm } from '@/lib/guide-search'
+import { norm, stemSet, stems } from '@/lib/guide-search'
 import { amountOf, isSource, notRecommendedReason, pinchSized } from '@/lib/nutrition'
 
 /** Sortable measures: energy, macros and every nutrient with an amount per 100 g. */
@@ -70,12 +70,22 @@ export const EMPTY_QUERY: FoodQuery = {
   per: '100g',
 }
 
-/** Diacritics-insensitive search over Czech + English names, category and basis. */
+const hayCache = new WeakMap<Food, { hay: string; stems?: Set<string> }>()
+
+/** Diacritics-insensitive search over Czech + English names, category and basis; a word that is not in the
+ * text still matches by its stem ("jablka" → Jablko, "knedlíky" → knedlík). */
 export function matchesText(food: Food, q: string) {
   const words = norm(q).split(/\s+/).filter(Boolean)
   if (!words.length) return true
-  const hay = norm(`${food.name} ${food.nameEn} ${food.category} ${food.subcategory ?? ''} ${food.basis}`)
-  return words.every((w) => hay.includes(w))
+  let c = hayCache.get(food)
+  if (!c) {
+    c = { hay: norm(`${food.name} ${food.nameEn} ${food.category} ${food.subcategory ?? ''} ${food.basis}`) }
+    hayCache.set(food, c)
+  }
+  const entry = c
+  return words.every(
+    (w) => entry.hay.includes(w) || stems(w).some((x) => (entry.stems ??= stemSet(entry.hay)).has(x)),
+  )
 }
 
 export function queryFoods(foods: Food[], q: FoodQuery): Food[] {
