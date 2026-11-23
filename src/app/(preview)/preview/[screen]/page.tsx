@@ -1,3 +1,4 @@
+import { weekOverview } from '@/lib/today/week'
 import { EXERCISE_BY_SLUG } from '@/data/exercises'
 import { RoutineList } from '@/components/mobility/RoutineList'
 import { rankRoutines } from '@/lib/pain/routine-fit'
@@ -313,6 +314,19 @@ export default async function Preview({
             sports: ['running'],
           })}
           today="2026-11-22"
+          week={weekOverview(
+            Array.from({ length: 12 }, (_, i) => ({
+              night_of: dayDaysAgo(i + 1),
+              duration_min: i < 6 ? 410 + (i % 3) * 15 : 380,
+            })),
+            Array.from({ length: 13 }, (_, i) => ({
+              logged_on: dayDaysAgo(i),
+              steps: i < 7 ? 8200 + i * 150 : 6400,
+              water_ml: i < 7 ? 1900 : 1500,
+              resting_hr: null,
+            })),
+            dayDaysAgo(0),
+          )}
           checkIn={{
             sleep_hours: 7,
             sleep_quality: 4,

@@ -199,6 +199,10 @@ test('today: strong recent pain gets its own tip; reading follows pain, goals an
   const reading = page.getByTestId('today-reading').getByRole('link')
   await expect(reading).toHaveCount(3)
   await expect(reading.first()).toContainText('Bolest zad')
+  // weekly overview from the check-in: this week vs last week
+  const week = page.getByTestId('today-week')
+  await expect(week.getByTestId('week-sleep')).toContainText('proti minulému týdnu')
+  await expect(week.getByTestId('week-steps')).toContainText('+')
 })
 
 test('mobility: routines that suit the profile come first and are marked', async ({ page }) => {

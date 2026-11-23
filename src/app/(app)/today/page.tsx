@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Activity, Apple, Bed, Dumbbell, FlaskConical, Gauge, Pill, Scale } from 'lucide-react'
 import { requireAppUser } from '@/lib/auth'
 import { profileTargets } from '@/lib/eat/profile-targets'
@@ -6,6 +6,7 @@ import { TodayView, type TodayCard } from '@/components/today/TodayView'
 import { trendChange, withTrend } from '@/lib/body/weight'
 import { readingFor } from '@/lib/today/reading'
 import { todayTip } from '@/lib/today/tip'
+import { weekOverview } from '@/lib/today/week'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 const iso = (d: Date) => d.toISOString().slice(0, 10)
@@ -26,45 +27,56 @@ export default async function TodayPage() {
   const dayStart = new Date(now)
   dayStart.setHours(0, 0, 0, 0)
 
-  const [w, food, stack, taken, pain, sleep, rec, labs, goals, prefs, bw] = await Promise.all([
-    db
-      .from('workouts')
-      .select('name, started_at')
-      .gte('started_at', weekStart.toISOString())
-      .order('started_at', { ascending: false }),
-    db.from('food_logs').select('kcal, protein_g').eq('logged_on', today),
-    db.from('user_supplements').select('id').eq('active', true),
-    db.from('supplement_logs').select('user_supplement_id').gte('taken_at', dayStart.toISOString()),
-    db
-      .from('pain_reports')
-      .select('region, score, reported_at')
-      .order('reported_at', { ascending: false })
-      .limit(1),
-    db.from('sleep_logs').select('duration_min, quality').eq('night_of', yesterday).maybeSingle(),
-    db
-      .from('recovery_logs')
-      .select('steps, water_ml, hrv_ms, resting_hr, stress')
-      .eq('logged_on', today)
-      .maybeSingle(),
-    db
-      .from('lab_values')
-      .select('marker, flag, taken_on')
-      .eq('confirmed', true)
-      .order('taken_on', { ascending: false })
-      .limit(200),
-    db.from('goals').select('goal').order('priority'),
-    db
-      .from('preferences')
-      .select('training_days, work_pattern, sports, pain_areas')
-      .eq('user_id', user.id)
-      .maybeSingle(),
-    db
-      .from('body_measurements')
-      .select('measured_at, weight_kg')
-      .not('weight_kg', 'is', null)
-      .gte('measured_at', iso(new Date(now.getTime() - 60 * 864e5)))
-      .order('measured_at'),
-  ])
+  const [w, food, stack, taken, pain, sleep, rec, labs, goals, prefs, bw, sleep14, rec14] = await Promise.all(
+    [
+      db
+        .from('workouts')
+        .select('name, started_at')
+        .gte('started_at', weekStart.toISOString())
+        .order('started_at', { ascending: false }),
+      db.from('food_logs').select('kcal, protein_g').eq('logged_on', today),
+      db.from('user_supplements').select('id').eq('active', true),
+      db.from('supplement_logs').select('user_supplement_id').gte('taken_at', dayStart.toISOString()),
+      db
+        .from('pain_reports')
+        .select('region, score, reported_at')
+        .order('reported_at', { ascending: false })
+        .limit(1),
+      db.from('sleep_logs').select('duration_min, quality').eq('night_of', yesterday).maybeSingle(),
+      db
+        .from('recovery_logs')
+        .select('steps, water_ml, hrv_ms, resting_hr, stress')
+        .eq('logged_on', today)
+        .maybeSingle(),
+      db
+        .from('lab_values')
+        .select('marker, flag, taken_on')
+        .eq('confirmed', true)
+        .order('taken_on', { ascending: false })
+        .limit(200),
+      db.from('goals').select('goal').order('priority'),
+      db
+        .from('preferences')
+        .select('training_days, work_pattern, sports, pain_areas')
+        .eq('user_id', user.id)
+        .maybeSingle(),
+      db
+        .from('body_measurements')
+        .select('measured_at, weight_kg')
+        .not('weight_kg', 'is', null)
+        .gte('measured_at', iso(new Date(now.getTime() - 60 * 864e5)))
+        .order('measured_at'),
+      // two weeks of check-ins for the weekly overview
+      db
+        .from('sleep_logs')
+        .select('night_of, duration_min')
+        .gte('night_of', iso(new Date(now.getTime() - 14 * 864e5))),
+      db
+        .from('recovery_logs')
+        .select('logged_on, steps, water_ml, resting_hr')
+        .gte('logged_on', iso(new Date(now.getTime() - 13 * 864e5))),
+    ],
+  )
 
   const workouts = (w.data ?? []) as { name: string; started_at: string }[]
   const kcal = Math.round((food.data ?? []).reduce((a: number, r: { kcal: number }) => a + Number(r.kcal), 0))
@@ -219,6 +231,8 @@ export default async function TodayPage() {
       cards={cards}
       reading={reading}
       today={today}
+      week={weekOverview(sleep14.data ?? [], rec14.data ?? [], today)}
+      locale={(await getLocale()) === 'en' ? 'en' : 'cs'}
       checkIn={{
         sleep_hours: sl?.duration_min ? Math.round((sl.duration_min / 60) * 10) / 10 : null,
         sleep_quality: sl?.quality ?? null,

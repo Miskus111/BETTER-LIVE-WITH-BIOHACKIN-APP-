@@ -277,7 +277,20 @@
     "readingTitle": "Čtení pro vás",
     "readingHint": "Vybrané podle vašich cílů, bolestí a sportu z profilu.",
     "readingMinutes": "{n} min čtení",
-    "tipPain": "Naposledy jste hlásili bolest {score}/10 ({region}). Dnes vynechte zátěž, která ji zhoršuje, a projděte mapu bolesti v Mobilitě. Při zhoršení nebo varovných příznacích jděte k lékaři."
+    "tipPain": "Naposledy jste hlásili bolest {score}/10 ({region}). Dnes vynechte zátěž, která ji zhoršuje, a projděte mapu bolesti v Mobilitě. Při zhoršení nebo varovných příznacích jděte k lékaři.",
+    "weekTitle": "Tento týden",
+    "weekHint": "Průměr za posledních 7 dní z denního check-inu, pod ním změna proti týdnu předtím.",
+    "week_sleep": "Spánek",
+    "week_steps": "Kroky",
+    "week_water": "Voda",
+    "week_restingHr": "Klidový tep",
+    "weekUnit_sleep": "h",
+    "weekUnit_steps": "denně",
+    "weekUnit_water": "l",
+    "weekUnit_restingHr": "tepů/min",
+    "weekDelta": "{d} proti minulému týdnu",
+    "weekNoCompare": "minulý týden bez záznamu",
+    "weekFewDays": "jen {n} {n, plural, one {den} few {dny} other {dní}}"
   },
   "settings": {
     "title": "Nastavení",

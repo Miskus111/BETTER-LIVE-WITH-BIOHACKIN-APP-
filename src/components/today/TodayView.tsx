@@ -6,6 +6,7 @@ import { CheckIn } from '@/components/today/CheckIn'
 import type { BodyGuide } from '@/data/body-guides'
 import { cx } from '@/lib/format'
 import { readingMinutes } from '@/lib/today/reading'
+import type { WeekMetric } from '@/lib/today/week'
 
 export interface TodayCard {
   href: string
@@ -26,6 +27,8 @@ export async function TodayView({
   reading,
   today,
   checkIn,
+  week = [],
+  locale = 'cs',
 }: {
   name: string
   tip: string
@@ -33,6 +36,9 @@ export async function TodayView({
   reading: BodyGuide[]
   today: string
   checkIn: ComponentProps<typeof CheckIn>['initial']
+  /** this week's averages from the daily check-in vs the week before */
+  week?: WeekMetric[]
+  locale?: 'cs' | 'en'
 }) {
   const t = await getTranslations('today')
   return (
@@ -79,6 +85,40 @@ export async function TodayView({
           </li>
         ))}
       </ul>
+
+      {week.length > 0 && (
+        <section className="card mt-6 p-5" aria-labelledby="week" data-testid="today-week">
+          <h2 id="week" className="text-[17px] font-medium">
+            {t('weekTitle')}
+          </h2>
+          <p className="text-subtle mt-1 text-[13px]">{t('weekHint')}</p>
+          <dl className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+            {week.map((m) => {
+              const nf = new Intl.NumberFormat(locale === 'en' ? 'en' : 'cs-CZ', {
+                maximumFractionDigits: m.key === 'sleep' || m.key === 'water' ? 1 : 0,
+              })
+              const delta = m.now !== null && m.before !== null ? m.now - m.before : null
+              return (
+                <div key={m.key} data-testid={`week-${m.key}`}>
+                  <dt className="text-subtle text-[13px]">{t(`week_${m.key}`)}</dt>
+                  <dd className="mt-0.5 font-mono text-[18px] leading-tight">
+                    {m.now === null ? '—' : nf.format(m.now)}
+                    <span className="text-subtle ml-1 font-sans text-[12.5px]">{t(`weekUnit_${m.key}`)}</span>
+                  </dd>
+                  <dd className="text-subtle text-[12.5px]">
+                    {delta === null
+                      ? t('weekNoCompare')
+                      : t('weekDelta', {
+                          d: `${delta > 0 ? '+' : delta < 0 ? '−' : '±'}${nf.format(Math.abs(delta))}`,
+                        })}
+                    {m.days < 3 && ` · ${t('weekFewDays', { n: m.days })}`}
+                  </dd>
+                </div>
+              )
+            })}
+          </dl>
+        </section>
+      )}
 
       <section className="mt-8" aria-labelledby="reading" data-testid="today-reading">
         <h2 id="reading" className="text-[17px] font-medium">

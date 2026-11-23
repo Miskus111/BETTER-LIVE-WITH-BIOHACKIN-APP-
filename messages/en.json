@@ -277,7 +277,20 @@
     "readingTitle": "Reading for you",
     "readingHint": "Picked from the goals, pain areas and sports in your profile (articles in Czech).",
     "readingMinutes": "{n} min read",
-    "tipPain": "Your last pain report was {score}/10 ({region}). Today skip loads that make it worse and go through the pain map in Mobility. If it gets worse or you notice warning signs, see a doctor."
+    "tipPain": "Your last pain report was {score}/10 ({region}). Today skip loads that make it worse and go through the pain map in Mobility. If it gets worse or you notice warning signs, see a doctor.",
+    "weekTitle": "This week",
+    "weekHint": "Average of the last 7 days from the daily check-in, with the change from the week before.",
+    "week_sleep": "Sleep",
+    "week_steps": "Steps",
+    "week_water": "Water",
+    "week_restingHr": "Resting heart rate",
+    "weekUnit_sleep": "h",
+    "weekUnit_steps": "a day",
+    "weekUnit_water": "l",
+    "weekUnit_restingHr": "bpm",
+    "weekDelta": "{d} vs last week",
+    "weekNoCompare": "no entries last week",
+    "weekFewDays": "only {n} {n, plural, one {day} other {days}}"
   },
   "settings": {
     "title": "Settings",
