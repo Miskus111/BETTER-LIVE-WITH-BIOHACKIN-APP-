@@ -65,13 +65,19 @@ export function FoodDetail({
           ['Bílkoviny', food.macros.protein, 'g'],
           ['Tuky', food.macros.fat, 'g'],
           ['Sacharidy', food.macros.carbs, 'g'],
-          ['Vláknina', food.macros.fiber, 'g'],
+          ['Vláknina', food.fiberUnknown ? null : food.macros.fiber, 'g'],
         ].map(([k, v, u]) => (
           <div key={k as string} className="border-line rounded-xl border p-2.5 text-center">
             <dt className="text-subtle font-mono text-[12px]">{k}</dt>
             <dd className="mt-0.5 text-[16px] font-medium">
-              {String(v).replace('.', ',')}
-              <span className="text-muted text-[12px]">{u && ` ${u}`}</span>
+              {v === null ? (
+                <span className="text-subtle text-[13px] font-normal">bez údajů</span>
+              ) : (
+                <>
+                  {String(v).replace('.', ',')}
+                  <span className="text-muted text-[12px]">{u && ` ${u}`}</span>
+                </>
+              )}
             </dd>
           </div>
         ))}

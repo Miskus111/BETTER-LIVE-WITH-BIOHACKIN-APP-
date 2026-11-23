@@ -26,6 +26,7 @@ function toFood(l: LiteFood): Food {
     fdc: l.source,
     kcal: l.kcal ?? 0,
     macros: { protein: l.protein ?? 0, fat: l.fat ?? 0, carbs: l.carbs ?? 0, fiber: l.fiber ?? 0 },
+    ...(l.fiber == null ? { fiberUnknown: true } : {}),
     micros: l.micros,
     completeProtein: l.completeProtein,
     liveCultures: l.liveCultures,

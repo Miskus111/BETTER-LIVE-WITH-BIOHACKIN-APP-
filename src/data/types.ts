@@ -164,6 +164,8 @@ export interface Food {
   kcal: number
   /** g per 100 g (carbs = total carbohydrate incl. fibre); missing values are 0 here — the full panel shows "no data" */
   macros: { protein: number; fat: number; carbs: number; fiber: number }
+  /** the source has no fibre value: shown as „bez údajů“, never as 0 (macros.fiber is 0 only for arithmetic) */
+  fiberUnknown?: boolean
   micros: Partial<Record<NutrientId, number>>
   completeProtein?: boolean
   liveCultures?: boolean

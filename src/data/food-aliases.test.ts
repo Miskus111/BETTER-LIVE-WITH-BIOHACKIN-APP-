@@ -13,3 +13,13 @@ describe('renamed food ids', () => {
     }
   })
 })
+
+describe('unknown fibre is not zero', () => {
+  it('milk and dishes with milk are marked fiberUnknown; foods with a value are not', async () => {
+    const { FOOD_BY_ID } = await import('./foods')
+    expect(FOOD_BY_ID['milk'].fiberUnknown).toBe(true)
+    expect(FOOD_BY_ID['houskovy-knedlik'].fiberUnknown).toBe(true)
+    expect(FOOD_BY_ID['lentils'].fiberUnknown).toBeUndefined()
+    expect(FOOD_BY_ID['egg'].fiberUnknown).toBeUndefined() // a real 0
+  })
+})
