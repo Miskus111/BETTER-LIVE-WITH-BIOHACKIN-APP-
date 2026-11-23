@@ -1,3 +1,4 @@
+import { pragueDay, pragueMidnight } from '@/lib/dates'
 import { getTranslations } from 'next-intl/server'
 import { requireAppUser } from '@/lib/auth'
 import { StackTracker, type StackRow } from '@/components/supplements/StackTracker'
@@ -12,8 +13,8 @@ export default async function SupplementsPage() {
   const { supabase, user } = await requireAppUser()
   const db = supabase as unknown as Db
   const t = await getTranslations('supp')
-  const since = new Date()
-  since.setHours(0, 0, 0, 0)
+  // today starts at midnight in Prague (the server runs on UTC)
+  const since = pragueMidnight(pragueDay(new Date()))
   const [{ data: stack }, { data: logs }, { data: weekLogs }, { data: prefs }] = await Promise.all([
     db
       .from('user_supplements')

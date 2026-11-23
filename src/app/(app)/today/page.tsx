@@ -1,4 +1,4 @@
-import { dayBefore, pragueDay } from '@/lib/dates'
+import { dayBefore, pragueDay, pragueMidnight, pragueMonday } from '@/lib/dates'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Activity, Apple, Bed, Dumbbell, FlaskConical, Gauge, Pill, Scale } from 'lucide-react'
 import { requireAppUser } from '@/lib/auth'
@@ -23,11 +23,9 @@ export default async function TodayPage() {
   // calendar days in Prague (the server runs on UTC)
   const today = pragueDay(now)
   const yesterday = dayBefore(today, 1)
-  const weekStart = new Date(now)
-  weekStart.setDate(now.getDate() - ((now.getDay() + 6) % 7))
-  weekStart.setHours(0, 0, 0, 0)
-  const dayStart = new Date(now)
-  dayStart.setHours(0, 0, 0, 0)
+  // week and day start at midnight in Prague, not UTC
+  const weekStart = pragueMidnight(pragueMonday(today))
+  const dayStart = pragueMidnight(today)
 
   const [w, food, stack, taken, pain, sleep, rec, labs, goals, prefs, bw, sleep14, rec14] = await Promise.all(
     [
@@ -135,7 +133,7 @@ export default async function TodayPage() {
     proteinTarget: tk?.proteinG ?? null,
     workouts: workouts.length,
     trainingDays,
-    weekday: now.getDay(),
+    weekday: new Date(`${today}T12:00:00Z`).getUTCDay(), // day of the week in Prague
     pain: lastPain
       ? { ...lastPain, ageDays: lastPainAt ? (now.getTime() - new Date(lastPainAt).getTime()) / 864e5 : 99 }
       : null,
