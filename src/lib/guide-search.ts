@@ -17,6 +17,70 @@ export function stems(word: string): string[] {
 /** All stems of the words in an already-normalised text. */
 export const stemSet = (s: string) => new Set(s.split(/[^a-z0-9]+/).flatMap(stems))
 
+/** Edit distance with adjacent swaps ("kofien" → "kofein" is 1), giving up above `max`. */
+export function editDistance(a: string, b: string, max: number): number {
+  if (Math.abs(a.length - b.length) > max) return max + 1
+  let prev2: number[] = []
+  let prev = Array.from({ length: b.length + 1 }, (_, j) => j)
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i]
+    let best = i
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      let v = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost)
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, prev2[j - 2] + 1)
+      cur.push(v)
+      best = Math.min(best, v)
+    }
+    if (best > max) return max + 1
+    prev2 = prev
+    prev = cur
+  }
+  return prev[b.length]
+}
+
+/** Words of 4+ letters in the given texts: normalised form → how it is written (with diacritics). */
+export function wordVocabulary(texts: string[]): Map<string, string> {
+  const out = new Map<string, string>()
+  for (const text of texts)
+    for (const w of text.toLowerCase().split(/[^\p{L}\p{N}]+/u))
+      if (w.length >= 4) {
+        const n = norm(w)
+        if (!out.has(n)) out.set(n, w)
+      }
+  return out
+}
+
+/**
+ * Typo fix: every word of 4+ letters that `known` doesn't recognise is replaced by the closest vocabulary word
+ * (1 edit, 2 for words of 7+ letters). Undefined when nothing needed or could be fixed.
+ */
+export function fixTypos(
+  query: string,
+  vocabulary: Map<string, string>,
+  known: (word: string) => boolean,
+): string | undefined {
+  let changed = false
+  const fixed = query
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => {
+      const t = norm(word)
+      if (t.length < 4 || known(t)) return word
+      const max = t.length >= 7 ? 2 : 1
+      let best: { d: number; w: string } | undefined
+      for (const [n, written] of vocabulary) {
+        const d = editDistance(t, n, max)
+        if (d <= max && (!best || d < best.d)) best = { d, w: written }
+      }
+      if (!best) return word
+      changed = true
+      return best.w
+    })
+  return changed ? fixed.join(' ') : undefined
+}
+
 const cache = new WeakMap<BodyGuide, { title: string; lead: string; body: string }>()
 /** normalised text of a guide, computed once (search runs on every keystroke) */
 const fields = (g: BodyGuide) => {

@@ -469,6 +469,8 @@
     "grams": "Gramy",
     "add": "Přidat",
     "searchFood": "Hledat potravinu…",
+    "noFood": "Nic jsme nenašli.",
+    "didYouMean": "Mysleli jste „{fix}“?",
     "empty": "Zatím nic",
     "remaining": "Zbývá",
     "over": "Nad cílem",

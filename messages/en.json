@@ -469,6 +469,8 @@
     "grams": "Grams",
     "add": "Add",
     "searchFood": "Search foods…",
+    "noFood": "Nothing found.",
+    "didYouMean": "Did you mean “{fix}”?",
     "empty": "Nothing yet",
     "remaining": "Remaining",
     "over": "Over target",

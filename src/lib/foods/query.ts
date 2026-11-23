@@ -1,6 +1,6 @@
 import { NUTRIENTS } from '@/data/nutrients'
 import type { Food, NutrientId } from '@/data/types'
-import { norm, stemSet, stems } from '@/lib/guide-search'
+import { fixTypos, norm, stemSet, stems, wordVocabulary } from '@/lib/guide-search'
 import { foodAliases } from './aliases'
 import { amountOf, isSource, notRecommendedReason, pinchSized } from '@/lib/nutrition'
 
@@ -69,6 +69,14 @@ export const EMPTY_QUERY: FoodQuery = {
   highIn: '',
   sort: '',
   per: '100g',
+}
+
+let foodWords: Map<string, string> | undefined
+
+/** A typo fix for a food search with no results ("jogrt" → jogurt); undefined when nothing could be fixed. */
+export function foodTypoFix(foods: Food[], q: string): string | undefined {
+  foodWords ??= wordVocabulary(foods.map((f) => `${f.name} ${f.nameEn} ${f.category} ${foodAliases(f)}`))
+  return fixTypos(q, foodWords, (w) => foods.some((f) => matchesText(f, w)))
 }
 
 const hayCache = new WeakMap<Food, { hay: string; stems?: Set<string> }>()

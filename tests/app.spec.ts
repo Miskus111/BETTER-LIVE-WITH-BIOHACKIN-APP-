@@ -89,6 +89,20 @@ test('food diary warns about foods that clash with the profile (allergy, diet)',
   await expect(page.getByTestId('diary-conflict').first()).toContainText(/vegetarián/i)
 })
 
+test('food diary says when nothing matches and offers a typo fix', async ({ page }) => {
+  await page.goto('/preview/eat')
+  await page
+    .getByTestId('meal-snack')
+    .getByRole('button', { name: /Přidat|Add/ })
+    .click()
+  const box = page.getByTestId('meal-snack').getByRole('textbox').first()
+  await box.fill('jogrt')
+  await expect(page.getByTestId('diary-no-food')).toContainText('Nic jsme nenašli')
+  await page.getByRole('button', { name: 'Mysleli jste „jogurt“?' }).click()
+  await expect(box).toHaveValue('jogurt')
+  await expect(page.getByTestId('diary-no-food')).toHaveCount(0)
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()

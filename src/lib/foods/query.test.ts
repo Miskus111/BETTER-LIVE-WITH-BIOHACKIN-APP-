@@ -86,3 +86,13 @@ describe('food text search and Czech word endings', () => {
     expect(names('čaj').every((n) => n.toLowerCase().includes('čaj'))).toBe(true)
   })
 })
+
+describe('food typo fix', () => {
+  it('suggests the closest food word only when nothing matches', async () => {
+    const { foodTypoFix } = await import('./query')
+    expect(foodTypoFix(FOODS, 'jogrt')).toBe('jogurt')
+    expect(foodTypoFix(FOODS, 'brokolce')).toBe('brokolice')
+    expect(foodTypoFix(FOODS, 'banán')).toBeUndefined()
+    expect(foodTypoFix(FOODS, 'xyzqw')).toBeUndefined()
+  })
+})

@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useMemo, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { FOODS, foodById } from '@/data/foods'
-import { matchesText } from '@/lib/foods/query'
+import { foodTypoFix, matchesText } from '@/lib/foods/query'
 import { NUTRIENTS } from '@/data/nutrients'
 import { PANEL_BY_KEY } from '@/lib/foods/panel'
 import type { NutrientId } from '@/data/types'
@@ -91,6 +91,11 @@ export function FoodDiary({
         )
         .slice(0, 8),
     [q, profile],
+  )
+  // a search with no results gets a typo fix to try ("jogrt" → jogurt)
+  const typoFix = useMemo(
+    () => (results.length || !q.trim() ? undefined : foodTypoFix(FOODS, q)),
+    [results, q],
   )
 
   const conflictText = (c: Conflict) =>
@@ -213,6 +218,20 @@ export function FoodDiary({
                     onChange={(e) => setGrams(e.target.value)}
                   />
                 </div>
+                {q.trim() && results.length === 0 && (
+                  <p
+                    className="text-subtle mt-3 px-2 text-[13.5px]"
+                    role="status"
+                    data-testid="diary-no-food"
+                  >
+                    {t('noFood')}{' '}
+                    {typoFix && (
+                      <button type="button" className="link" onClick={() => setQ(typoFix)}>
+                        {t('didYouMean', { fix: typoFix })}
+                      </button>
+                    )}
+                  </p>
+                )}
                 <ul className="mt-2 max-h-64 overflow-y-auto">
                   {results.map(({ f, conflicts }) => (
                     <li key={f.id}>
