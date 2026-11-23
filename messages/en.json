@@ -290,7 +290,7 @@
     "weekUnit_restingHr": "bpm",
     "weekDelta": "{d} vs last week",
     "weekNoCompare": "no entries last week",
-    "weekFewDays": "only {n} {n, plural, one {day} other {days}}"
+    "weekFewDays": "days logged: {n}"
   },
   "settings": {
     "title": "Settings",

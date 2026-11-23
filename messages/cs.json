@@ -290,7 +290,7 @@
     "weekUnit_restingHr": "tepů/min",
     "weekDelta": "{d} proti minulému týdnu",
     "weekNoCompare": "minulý týden bez záznamu",
-    "weekFewDays": "jen {n} {n, plural, one {den} few {dny} other {dní}}"
+    "weekFewDays": "dní se záznamem: {n}"
   },
   "settings": {
     "title": "Nastavení",
