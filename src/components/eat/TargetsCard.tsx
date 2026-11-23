@@ -8,12 +8,15 @@ type Totals = { kcal: number; protein: number; fat: number; carbs: number; fiber
 export async function TargetsCard({
   result,
   totals,
+  week = null,
 }: {
   result:
     | { status: 'ok'; targets: Targets & { bmr: number; tdee: number } }
     | { status: 'incomplete' }
     | { status: 'support' }
   totals: Totals
+  /** average of the past 7 logged days (today excluded) */
+  week?: { days: number; kcal: number; protein: number } | null
 }) {
   const t = await getTranslations('eat')
   if (result.status === 'incomplete') return <p className="card text-muted p-5">{t('missingProfile')}</p>
@@ -72,6 +75,17 @@ export async function TargetsCard({
           )
         })}
       </ul>
+      {week && (
+        <p className="text-muted mt-4 text-[13.5px]" data-testid="eat-week">
+          {t('weekAverage', {
+            days: week.days,
+            kcal: week.kcal.toLocaleString('cs-CZ'),
+            kcalTarget: tg.kcal.toLocaleString('cs-CZ'),
+            protein: week.protein,
+            proteinTarget: tg.proteinG,
+          })}
+        </p>
+      )}
       {tg.limited && (
         <p className="text-subtle mt-3 flex gap-1.5 text-[12.5px]">
           <ShieldCheck size={14} className="mt-0.5 shrink-0" aria-hidden /> {t('floorNote')}

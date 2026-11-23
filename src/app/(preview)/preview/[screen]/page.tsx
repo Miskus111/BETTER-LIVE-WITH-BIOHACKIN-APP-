@@ -355,6 +355,7 @@ export default async function Preview({
           <TargetsCard
             result={{ status: 'ok', targets: t }}
             totals={{ kcal: 1450, protein: 96, fat: 52, carbs: 150, fiber: 18 }}
+            week={{ days: 5, kcal: 2310, protein: 128 }}
           />
           <FoodDiary
             day="2026-11-16"

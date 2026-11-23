@@ -487,7 +487,8 @@
     "conflictAllergy": "Allergy: {what}",
     "conflictDiet": "Not {what}",
     "conflictDislike": "You don't eat: {what}",
-    "conflictNote": "From your profile — the product's label decides."
+    "conflictNote": "From your profile — the product's label decides.",
+    "weekAverage": "Average of the last 7 days (without today, {days} days logged): {kcal} of {kcalTarget} kcal, protein {protein} of {proteinTarget} g."
   },
   "supp": {
     "title": "Supplements",

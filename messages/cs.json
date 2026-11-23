@@ -487,7 +487,8 @@
     "conflictAllergy": "Alergie: {what}",
     "conflictDiet": "Neodpovídá stravě: {what}",
     "conflictDislike": "Nejíte: {what}",
-    "conflictNote": "Podle vašeho profilu — rozhoduje etiketa výrobku."
+    "conflictNote": "Podle vašeho profilu — rozhoduje etiketa výrobku.",
+    "weekAverage": "Průměr za posledních 7 dní (bez dneška, {days} dní se záznamem): {kcal} z {kcalTarget} kcal, bílkoviny {protein} z {proteinTarget} g."
   },
   "supp": {
     "title": "Doplňky",

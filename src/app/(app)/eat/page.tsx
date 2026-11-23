@@ -5,6 +5,7 @@ import { profileTargets } from '@/lib/eat/profile-targets'
 import { FoodDiary, mealNow, type LogRow } from '@/components/eat/FoodDiary'
 import { foodById } from '@/data/foods'
 import { TargetsCard } from '@/components/eat/TargetsCard'
+import { diaryWeek } from '@/lib/eat/week'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -15,7 +16,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
   const db = supabase as unknown as Db
   const t = await getTranslations('eat')
   const day = new Date().toISOString().slice(0, 10)
-  const [{ data: prefs }, { data: goals }, { data: logs }] = await Promise.all([
+  const [{ data: prefs }, { data: goals }, { data: logs }, { data: weekLogs }] = await Promise.all([
     db
       .from('preferences')
       .select('training_days, work_pattern, diet_type, allergies, dislikes')
@@ -27,6 +28,11 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
       .select('id, meal, title, grams, kcal, protein_g, fat_g, carbs_g, fiber_g')
       .eq('logged_on', day)
       .order('created_at'),
+    db
+      .from('food_logs')
+      .select('logged_on, kcal, protein_g')
+      .gte('logged_on', new Date(Date.parse(day) - 7 * 864e5).toISOString().slice(0, 10))
+      .lt('logged_on', day),
   ])
   const rows = (logs ?? []) as LogRow[]
   const totals = rows.reduce(
@@ -58,7 +64,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
           {t('explore')}
         </Link>
       </div>
-      <TargetsCard result={result} totals={totals} />
+      <TargetsCard result={result} totals={totals} week={diaryWeek(weekLogs ?? [], day)} />
       <FoodDiary
         rows={rows}
         day={day}

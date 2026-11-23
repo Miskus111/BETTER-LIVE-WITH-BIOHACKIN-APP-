@@ -72,6 +72,8 @@ test('food diary shows targets and logged meals', async ({ page }) => {
   await page.goto('/preview/eat')
   await expect(page.getByTestId('eat-targets')).toBeVisible()
   await expect(page.getByTestId('meal-breakfast')).toContainText(/Ovesné vločky|Oats/)
+  // a 7-day average under the daily targets (today left out)
+  await expect(page.getByTestId('eat-week')).toContainText('5 dní se záznamem')
 })
 
 test('food diary warns about foods that clash with the profile (allergy, diet)', async ({ page }) => {
