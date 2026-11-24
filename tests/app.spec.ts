@@ -117,6 +117,14 @@ test('food diary offers the foods you often eat at that meal', async ({ page }) 
   await expect(recent).toHaveCount(0)
 })
 
+test('food diary tells you when deleting an entry fails (no silent failure)', async ({ page }) => {
+  // the preview has no database, so the delete fails: the entry stays and an error is shown
+  await page.goto('/preview/eat')
+  await page.getByRole('button', { name: 'Smazat', exact: true }).first().click()
+  await expect(page.getByRole('alert').filter({ hasText: 'Záznam se nepodařilo smazat' })).toBeVisible()
+  await expect(page.getByTestId('diary-undo')).toHaveCount(0)
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()

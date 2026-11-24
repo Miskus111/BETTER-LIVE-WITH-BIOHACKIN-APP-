@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { FOODS, foodById } from '@/data/foods'
 import { foodTypoFix, matchesText } from '@/lib/foods/query'
@@ -151,10 +151,47 @@ export function FoodDiary({
       }
     })
 
-  const remove = (id: string) =>
+  const remove = (r: LogRow) =>
     start(async () => {
       const db = createClient() as unknown as Db
-      await db.from('food_logs').delete().eq('id', id)
+      const { error: err } = await db.from('food_logs').delete().eq('id', r.id)
+      if (err) {
+        console.error('[eat] delete failed', err.message)
+        setError(t('deleteError'))
+        return
+      }
+      setDeleted(r)
+      router.refresh()
+    })
+
+  // a deleted entry can be put back for a few seconds (a stray tap on the bin icon)
+  const [deleted, setDeleted] = useState<LogRow | null>(null)
+  useEffect(() => {
+    if (!deleted) return
+    const timer = setTimeout(() => setDeleted(null), 8000)
+    return () => clearTimeout(timer)
+  }, [deleted])
+  const undo = (r: LogRow) =>
+    start(async () => {
+      const db = createClient() as unknown as Db
+      const { error: err } = await db.from('food_logs').insert({
+        client_id: crypto.randomUUID(),
+        logged_on: day,
+        meal: r.meal,
+        title: r.title,
+        grams: r.grams,
+        kcal: r.kcal,
+        protein_g: r.protein_g,
+        fat_g: r.fat_g,
+        carbs_g: r.carbs_g,
+        fiber_g: r.fiber_g,
+      })
+      if (err) {
+        console.error('[eat] undo failed', err.message)
+        setError(t('saveError'))
+        return
+      }
+      setDeleted(null)
       router.refresh()
     })
 
@@ -177,6 +214,25 @@ export function FoodDiary({
 
   return (
     <div className="space-y-4">
+      {deleted && (
+        <div
+          role="status"
+          data-testid="diary-undo"
+          className="card flex items-center justify-between gap-3 px-4 py-2.5 text-[14px]"
+        >
+          <span className="text-muted min-w-0 truncate">
+            {t('deleted', { name: rowName(deleted.title) })}
+          </span>
+          <button type="button" className="link shrink-0" disabled={pending} onClick={() => undo(deleted)}>
+            {t('undo')}
+          </button>
+        </div>
+      )}
+      {error && !open && (
+        <p role="alert" className="text-[13px] text-[#ff9b9b]">
+          {error}
+        </p>
+      )}
       {MEALS.map((meal) => {
         const items = rows.filter((r) => r.meal === meal)
         const kcal = items.reduce((s, r) => s + Number(r.kcal), 0)
@@ -207,7 +263,7 @@ export function FoodDiary({
                     <button
                       type="button"
                       aria-label={t('deleteEntry')}
-                      onClick={() => remove(r.id)}
+                      onClick={() => remove(r)}
                       className="text-subtle p-1 hover:text-[#ff9b9b]"
                     >
                       <Trash2 size={15} />

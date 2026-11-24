@@ -4,6 +4,8 @@
 
 - **Jídelníček:** „Často jíte“ — potraviny z posledního týdne, které k danému jídlu zapisujete nejčastěji, jedním
   klepnutím a ve stejném množství jako naposledy.
+- **Smazání záznamu** jde 8 sekund vrátit („Vrátit“); když se smazání nepovede, aplikace to řekne (dřív tiše
+  selhalo).
 - **Hledání potravin** snese české koncovky („jablka“, „knedlíky“), běžná slova („vajíčko“, „špagety“) a překlepy
   („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to.
 
