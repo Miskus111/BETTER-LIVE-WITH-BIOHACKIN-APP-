@@ -3,6 +3,7 @@ import { z } from 'zod/v4'
 import Anthropic from '@anthropic-ai/sdk'
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod'
 import { getSession } from '@/lib/auth'
+import { sniffLabFile } from '@/lib/labs/file-type'
 import { gate, getPlan } from '@/lib/plan'
 import { coachDailyLimit } from '@/lib/billing'
 import { addTokens, reserveAiCall } from '@/lib/ai/usage'
@@ -88,6 +89,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'unsupported_type' }, { status: 415 })
 
   const bytes = Buffer.from(await file.arrayBuffer())
+  // the content decides, not the declared type: a renamed file must not cost an AI call or reach storage
+  const type = sniffLabFile(bytes)
+  if (!type) return NextResponse.json({ error: 'unsupported_type' }, { status: 415 })
 
   const ai = getAnthropic()
   if (!ai) return NextResponse.json({ error: 'ai_not_configured', storage_path: null }, { status: 503 })
@@ -101,13 +105,13 @@ export async function POST(req: Request) {
 
   const data = bytes.toString('base64')
   const doc: Anthropic.Beta.BetaContentBlockParam =
-    file.type === 'application/pdf'
+    type === 'application/pdf'
       ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data } }
       : {
           type: 'image',
           source: {
             type: 'base64',
-            media_type: file.type as 'image/png' | 'image/jpeg' | 'image/webp',
+            media_type: type as 'image/png' | 'image/jpeg' | 'image/webp',
             data,
           },
         }
@@ -128,12 +132,12 @@ export async function POST(req: Request) {
 
     // keep the original only once it was read successfully (private bucket, path prefixed with the
     // user id — storage RLS); failed or refused documents are never stored
-    const ext = file.type === 'application/pdf' ? 'pdf' : file.type.split('/')[1]
+    const ext = type === 'application/pdf' ? 'pdf' : type.split('/')[1]
     const storage_path = `${s.user.id}/${crypto.randomUUID()}.${ext}`
     const up =
       out.kind === 'other'
         ? { error: 'not a lab report' }
-        : await s.supabase.storage.from('lab-reports').upload(storage_path, bytes, { contentType: file.type })
+        : await s.supabase.storage.from('lab-reports').upload(storage_path, bytes, { contentType: type })
     const body: ExtractResponse = {
       source: 'ai',
       kind: out.kind,
