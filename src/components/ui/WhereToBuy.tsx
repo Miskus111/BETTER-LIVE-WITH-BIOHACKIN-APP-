@@ -1,14 +1,15 @@
 import Link from '@/components/ui/Link'
 import { ArrowUpRight, Info, Store } from 'lucide-react'
-import { AFFILIATE_DISCLOSURE, affiliateUrl } from '@/data/affiliate'
+import { useTranslations } from 'next-intl'
+import { affiliateUrl } from '@/data/affiliate'
 import { RETAILERS, type ShopLink } from '@/data/retailers'
 import { cx } from '@/lib/format'
 
-const KIND: Record<ShopLink['kind'], string> = {
-  doplněk: 'Doplněk stravy',
-  kategorie: 'Kategorie',
-  potravina: 'Potravina',
-}
+const KIND = {
+  doplněk: 'kind_supplement',
+  kategorie: 'kind_category',
+  potravina: 'kind_food',
+} as const satisfies Record<ShopLink['kind'], string>
 
 /**
  * Doporučené produkty v českých obchodech. Odkazy jsou partnerské (affiliate) → rel="sponsored",
@@ -16,7 +17,7 @@ const KIND: Record<ShopLink['kind'], string> = {
  */
 export function WhereToBuy({
   links,
-  title = 'Kde koupit',
+  title,
   compact,
   className,
 }: {
@@ -25,12 +26,13 @@ export function WhereToBuy({
   compact?: boolean
   className?: string
 }) {
+  const t = useTranslations('shop')
   if (!links?.length) return null
   const notes = [...new Set(links.map((l) => l.note).filter(Boolean))] as string[]
   return (
     <div className={className}>
       <p className="text-subtle mb-2 flex items-center gap-1.5 font-mono text-[12px] tracking-wider uppercase">
-        <Store size={13} aria-hidden /> {title}
+        <Store size={13} aria-hidden /> {title ?? t('title')}
       </p>
       <ul className={cx('grid gap-2', !compact && 'sm:grid-cols-2')}>
         {links.map((l) => (
@@ -54,14 +56,14 @@ export function WhereToBuy({
               <span className="min-w-0 flex-1">
                 <span className="block text-[14px] leading-snug">{l.label}</span>
                 <span className="text-subtle block text-[12px]">
-                  {RETAILERS[l.retailer].name} · {KIND[l.kind]}
+                  {RETAILERS[l.retailer].name} · {t(KIND[l.kind])}
                 </span>
                 {l.why && <span className="text-muted mt-0.5 block text-[12.5px] leading-snug">{l.why}</span>}
               </span>
               <ArrowUpRight
                 size={15}
                 className="text-subtle group-hover:text-cyan shrink-0 transition"
-                aria-label="(otevře se v novém okně)"
+                aria-label={t('newWindow')}
               />
             </a>
           </li>
@@ -74,9 +76,9 @@ export function WhereToBuy({
         </p>
       ))}
       <p className="text-subtle mt-2 text-[12px]" data-testid="affiliate-disclosure">
-        {AFFILIATE_DISCLOSURE}{' '}
+        {t('disclosure')}{' '}
         <Link href="/jak-doporucujeme" className="hover:text-fg underline underline-offset-2">
-          Jak vybíráme
+          {t('how')}
         </Link>
       </p>
     </div>

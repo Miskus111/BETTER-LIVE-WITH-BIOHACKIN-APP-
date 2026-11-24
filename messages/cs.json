@@ -922,5 +922,19 @@
     "a6": "Ne. Pomůže vám rozumět tělu a sledovat, co děláte. Diagnózu a léčbu patří k lékaři; u výsledků krve vždy upozorníme, kdy je dobré se poradit.",
     "q7": "Co když mi Pro nebude k ničemu?",
     "a7": "Během bety si ho vyzkoušíte zdarma. Až spustíme placení, předplatné zrušíte kdykoli a další období se už nestrhne."
+  },
+  "shop": {
+    "intro": "Doporučené produkty vybrané podle formy a dávky.",
+    "how": "Jak vybíráme",
+    "title": "Kde koupit",
+    "newWindow": "(otevře se v novém okně)",
+    "disclosure": "Odkazy na obchody jsou partnerské (affiliate): když přes ně nakoupíte, můžeme získat provizi. Cenu pro vás to nemění. Produkty vybíráme podle formy, dávky a důkazů — ne podle výše provize.",
+    "kind_supplement": "Doplněk stravy",
+    "kind_category": "Kategorie",
+    "kind_food": "Potravina",
+    "topic_creatine": "Kreatin",
+    "topic_collagen": "Kolagen",
+    "topic_fish": "Ryby",
+    "czechShops": "Obchody i popisy produktů jsou české."
   }
 }

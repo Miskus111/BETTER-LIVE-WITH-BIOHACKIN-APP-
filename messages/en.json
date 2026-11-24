@@ -922,5 +922,19 @@
     "a6": "No. It helps you understand your body and track what you do. Diagnosis and treatment belong with a doctor; with blood results we always flag when it is worth asking one.",
     "q7": "What if Pro isn’t useful to me?",
     "a7": "During the beta you can try it for free. Once payments start, you can cancel anytime and the next period won’t be charged."
+  },
+  "shop": {
+    "intro": "Recommended products, chosen by form and dose.",
+    "how": "How we choose",
+    "title": "Where to buy",
+    "newWindow": "(opens in a new window)",
+    "disclosure": "Shop links are affiliate links: if you buy through them, we may earn a commission. It doesn't change your price. We choose products by form, dose and evidence — not by commission.",
+    "kind_supplement": "Supplement",
+    "kind_category": "Category",
+    "kind_food": "Food",
+    "topic_creatine": "Creatine",
+    "topic_collagen": "Collagen",
+    "topic_fish": "Fish",
+    "czechShops": "The shops and product descriptions are Czech."
   }
 }

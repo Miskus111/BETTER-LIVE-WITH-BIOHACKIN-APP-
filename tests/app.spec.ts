@@ -310,6 +310,19 @@ test('supplements: a vegan in winter sees B12 as needed, vitamin D, iodine and o
   await expect(box.getByRole('link').first()).toHaveAttribute('href', /\/doplnky\/vitamin-b12$/)
 })
 
+test('shop in English: headings, labels and the disclosure are English', async ({ page, context }) => {
+  await context.addCookies([{ name: 'blwb-locale', value: 'en', url: 'http://localhost:3100' }])
+  await page.goto('/preview/store')
+  const main = page.locator('main')
+  await expect(main).toContainText('How we choose')
+  await expect(main).toContainText('Creatine')
+  await expect(main).toContainText('Live cultures')
+  await expect(page.getByTestId('affiliate-disclosure').first()).toContainText('affiliate links')
+  // product names and descriptions come from Czech shops; the page's own words are English
+  for (const cs of ['Jak vybíráme', 'Kde koupit', 'Doplněk stravy', 'Živé kultury'])
+    await expect(main).not.toContainText(cs)
+})
+
 test('food diary in English shows English food and nutrient names', async ({ page, context }) => {
   await context.addCookies([{ name: 'blwb-locale', value: 'en', url: 'http://localhost:3100' }])
   await page.goto('/preview/eat?add=almonds')
