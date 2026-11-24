@@ -43,3 +43,37 @@ describe('coach tools', () => {
     expect(out.daily).toEqual([{ date: today, kcal: 500, protein_g: 30, carbs_g: 50, fat_g: 15, fiber_g: 6 }])
   })
 })
+
+describe('coach look-back windows use Prague calendar days', () => {
+  /** Records every .gte(column, value) the tool sends. */
+  function recordingDb(calls: [string, string, unknown][]) {
+    return {
+      from(table: string) {
+        const builder: Record<string, unknown> = {
+          then: (ok: (v: unknown) => unknown) => Promise.resolve({ data: [], error: null }).then(ok),
+          maybeSingle: () => Promise.resolve({ data: null, error: null }),
+        }
+        for (const m of ['select', 'eq', 'lte', 'order', 'limit', 'in', 'is']) builder[m] = () => builder
+        builder.gte = (col: string, v: unknown) => {
+          calls.push([table, col, v])
+          return builder
+        }
+        return builder
+      },
+    }
+  }
+  it('just after midnight in Prague (still the day before in UTC) counts from the Prague day', async () => {
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2026-11-23T23:30:00Z')) // 00:30 on 24 Nov in Prague
+    try {
+      const calls: [string, string, unknown][] = []
+      await runCoachTool(recordingDb(calls), 'u1', 'get_nutrition', { days: 7 })
+      await runCoachTool(recordingDb(calls), 'u1', 'get_pain_and_recovery', {})
+      // 7 days including today (24 Nov) start on 18 Nov; a UTC count would have started on 17 Nov
+      expect(calls).toContainEqual(['food_logs', 'logged_on', '2026-11-18'])
+      expect(calls).toContainEqual(['sleep_logs', 'night_of', '2026-11-10'])
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+})
