@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.2 — Rychlejší zapisování jídla (24. 11. 2026)
+## 0.6.2 — Rychlejší zapisování jídla (25. 11. 2026)
 
 - **Jídelníček:** „Často jíte“ — potraviny z posledního týdne, které k danému jídlu zapisujete nejčastěji, jedním
   klepnutím a ve stejném množství jako naposledy.
@@ -11,7 +11,14 @@
 - **Průvodce potravinami a doplňky a interaktivní mapa těla** jsou jen na webu (aplikace na ně odkazuje, staré adresy se přesměrují) —
   aplikace drží jen to osobní, web vzdělávací obsah.
 - **Hledání potravin** snese české koncovky („jablka“, „knedlíky“), běžná slova („vajíčko“, „špagety“) a překlepy
-  („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to.
+  („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to. Potraviny synchronizované s webem (481).
+- **Angličtina:** obchod (nadpisy, štítky, upozornění na partnerské odkazy) i všechny vlastní obrazovky aplikace; test
+  hlídá, že každý použitý klíč překladu existuje.
+- **Laboratoř:** nahraný soubor musí být podle obsahu opravdu PDF nebo obrázek — přejmenovaný soubor nestojí volání AI
+  a neuloží se.
+- **Kouč** počítá „posledních N dní“ podle českého kalendáře i těsně po půlnoci.
+- **Testy:** nikdy nevolají ostrou databázi ani placené API (lokální Supabase je povolená); obrazovky i na 320 px;
+  jednotkové testy běží i v UTC+14. Závislosti aktualizované, 0 známých zranitelností.
 
 ## 0.6.1 — Spolehlivost a angličtina (23. 11. 2026)
 
