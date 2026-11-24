@@ -21,6 +21,7 @@ const RULES: { match: (f: Food) => boolean; words: string }[] = [
   { match: (f) => f.id === 'gnocchi', words: 'noky' },
   { match: (f) => f.id === 'pork-ribs-cooked', words: 'zebirka' },
   { match: (f) => f.id === 'buchty', words: 'buchta buchticka' },
+  { match: (f) => f.id === 'halusky', words: 'halusky halusek bryndza brynza' },
 ]
 
 const cache = new WeakMap<Food, string>()
