@@ -150,6 +150,19 @@ test('food diary: a deleted entry can be put back with the same values', async (
   })
 })
 
+test('supplement stack tells you when ticking a dose or removing fails', async ({ page }) => {
+  // the database is answered here (never the real project): every write fails
+  await page.route('**/rest/v1/{supplement_logs,user_supplements}**', (route) =>
+    route.fulfill({ status: 500, contentType: 'application/json', body: '{"message":"down"}' }),
+  )
+  await page.goto('/preview/stack')
+  await page
+    .getByRole('button', { name: /Užito|Taken/ })
+    .first()
+    .click()
+  await expect(page.getByTestId('stack-error')).toContainText('Doplněk se nepodařilo uložit')
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()

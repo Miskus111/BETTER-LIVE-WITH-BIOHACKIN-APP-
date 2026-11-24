@@ -6,6 +6,8 @@
   klepnutím a ve stejném množství jako naposledy.
 - **Smazání záznamu** jde 8 sekund vrátit („Vrátit“); když se smazání nepovede, aplikace to řekne (dřív tiše
   selhalo).
+- **Doplňky:** odškrtnutí dávky a odebrání doplňku ohlásí chybu, když se nepovede (dřív tiše selhalo); „dnes“ se
+  počítá podle českého času i v cizině.
 - **Hledání potravin** snese české koncovky („jablka“, „knedlíky“), běžná slova („vajíčko“, „špagety“) a překlepy
   („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to.
 

@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useSafeTransition } from '@/lib/useSafeTransition'
 import { EVIDENCE } from '@/data/sources'
 import { cx } from '@/lib/format'
+import { pragueDay, pragueMidnight } from '@/lib/dates'
 
 export interface StackRow {
   id: string
@@ -45,6 +46,8 @@ export function StackTracker({ rows, medications }: { rows: StackRow[]; medicati
   const [timing, setTiming] = useState('')
   const [reminder, setReminder] = useState('')
   const [error, setError] = useState<string | null>(null)
+  // errors of the stack list itself (ticking a dose, removing a supplement), shown above the list
+  const [listError, setListError] = useState<string | null>(null)
   const [pending, start] = useSafeTransition(() => setError(t('saveError')))
   const [conditions, setConditions] = useState<Condition[]>([])
   useEffect(() => {
@@ -110,29 +113,41 @@ export function StackTracker({ rows, medications }: { rows: StackRow[]; medicati
   const toggleTaken = (r: StackRow) =>
     start(async () => {
       const db = createClient() as unknown as Db
-      if (r.takenToday) {
-        const since = new Date()
-        since.setHours(0, 0, 0, 0)
-        await db
-          .from('supplement_logs')
-          .delete()
-          .eq('user_supplement_id', r.id)
-          .gte('taken_at', since.toISOString())
-      } else await db.from('supplement_logs').insert({ user_supplement_id: r.id })
-      router.refresh()
+      setListError(null)
+      // "today" starts at midnight Prague time, the same boundary the page uses to mark a dose as taken
+      const { error: err } = r.takenToday
+        ? await db
+            .from('supplement_logs')
+            .delete()
+            .eq('user_supplement_id', r.id)
+            .gte('taken_at', pragueMidnight(pragueDay(new Date())).toISOString())
+        : await db.from('supplement_logs').insert({ user_supplement_id: r.id })
+      if (err) {
+        console.error('[supp] toggle failed', err.message)
+        setListError(t('saveError'))
+      } else router.refresh()
     })
 
   const remove = (id: string) =>
     start(async () => {
       const db = createClient() as unknown as Db
-      await db.from('user_supplements').update({ active: false }).eq('id', id)
-      router.refresh()
+      setListError(null)
+      const { error: err } = await db.from('user_supplements').update({ active: false }).eq('id', id)
+      if (err) {
+        console.error('[supp] remove failed', err.message)
+        setListError(t('saveError'))
+      } else router.refresh()
     })
 
   return (
     <div className="space-y-10">
       <section>
         <h2 className="eyebrow mb-3">{t('stack')}</h2>
+        {listError && (
+          <p role="alert" className="mb-3 text-[13px] text-[#ff9b9b]" data-testid="stack-error">
+            {listError}
+          </p>
+        )}
         {rows.length === 0 ? (
           <p className="text-muted">{t('empty')}</p>
         ) : (
