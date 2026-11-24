@@ -471,6 +471,8 @@
     "searchFood": "Search foods…",
     "noFood": "Nothing found.",
     "didYouMean": "Did you mean “{fix}”?",
+    "recent": "You often eat",
+    "recentAdd": "Log {name}, {grams} g",
     "empty": "Nothing yet",
     "remaining": "Remaining",
     "over": "Over target",

@@ -103,6 +103,20 @@ test('food diary says when nothing matches and offers a typo fix', async ({ page
   await expect(page.getByTestId('diary-no-food')).toHaveCount(0)
 })
 
+test('food diary offers the foods you often eat at that meal', async ({ page }) => {
+  await page.goto('/preview/eat')
+  await page
+    .getByTestId('meal-snack')
+    .getByRole('button', { name: /Přidat|Add/ })
+    .click()
+  const recent = page.getByTestId('diary-recent')
+  // the apple was a snack twice (last time 180 g), the yogurt once at breakfast
+  await expect(recent.getByRole('button').first()).toHaveText('Jablko · 180 g')
+  await expect(recent.getByRole('button')).toHaveCount(2)
+  await page.getByTestId('meal-snack').getByRole('textbox').first().fill('ban')
+  await expect(recent).toHaveCount(0)
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()

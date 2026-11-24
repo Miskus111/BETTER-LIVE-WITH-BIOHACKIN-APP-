@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.2 — Rychlejší zapisování jídla (24. 11. 2026)
+
+- **Jídelníček:** „Často jíte“ — potraviny z posledního týdne, které k danému jídlu zapisujete nejčastěji, jedním
+  klepnutím a ve stejném množství jako naposledy.
+- **Hledání potravin** snese české koncovky („jablka“, „knedlíky“), běžná slova („vajíčko“, „špagety“) a překlepy
+  („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to.
+
 ## 0.6.1 — Spolehlivost a angličtina (23. 11. 2026)
 
 - **Dnes:** tip dne bere v úvahu silnou nedávnou bolest (místo výzvy k tréninku).

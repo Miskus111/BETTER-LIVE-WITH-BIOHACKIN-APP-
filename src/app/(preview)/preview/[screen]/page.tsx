@@ -359,6 +359,11 @@ export default async function Preview({
           />
           <FoodDiary
             day="2026-11-16"
+            history={[
+              { logged_on: '2026-11-15', meal: 'snack', title: 'Jablko|apple', grams: 180 },
+              { logged_on: '2026-11-14', meal: 'snack', title: 'Jablko|apple', grams: 150 },
+              { logged_on: '2026-11-15', meal: 'breakfast', title: 'Bílý jogurt|yogurt', grams: 150 },
+            ]}
             prefill={
               addFood
                 ? { name: (await getLocale()) === 'en' ? addFood.nameEn : addFood.name, meal: 'lunch' }

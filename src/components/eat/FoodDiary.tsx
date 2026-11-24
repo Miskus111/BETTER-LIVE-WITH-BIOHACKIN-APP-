@@ -6,6 +6,7 @@ import { useMemo, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
 import { FOODS, foodById } from '@/data/foods'
 import { foodTypoFix, matchesText } from '@/lib/foods/query'
+import { recentFoods } from '@/lib/eat/recent'
 import { NUTRIENTS } from '@/data/nutrients'
 import { PANEL_BY_KEY } from '@/lib/foods/panel'
 import type { NutrientId } from '@/data/types'
@@ -44,15 +45,19 @@ export function mealNow(d: Date): Meal {
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 const NO_PROFILE: DietProfile = { diet: null, allergies: [], dislikes: [] }
+const NO_HISTORY: { logged_on: string; meal: string; title: string; grams: number }[] = []
 
 export function FoodDiary({
   rows,
   day,
   profile = NO_PROFILE,
   prefill,
+  history = NO_HISTORY,
 }: {
   rows: LogRow[]
   day: string
+  /** the past week's entries: the foods logged most often there are offered for one-tap logging */
+  history?: { logged_on: string; meal: string; title: string; grams: number | string }[]
   /** allergies, diet and dislikes from onboarding: matching foods get a warning and go last */
   profile?: DietProfile
   /** open this meal with the search already filled in (link from the website) */
@@ -92,6 +97,17 @@ export function FoodDiary({
         .slice(0, 8),
     [q, profile],
   )
+  // the open meal's usual foods from the past week, for one-tap logging
+  const recent = useMemo(
+    () =>
+      open
+        ? recentFoods(history, open, (id) => !!foodById(id)).map((r) => ({
+            food: foodById(r.id)!,
+            grams: r.grams,
+          }))
+        : [],
+    [history, open],
+  )
   // a search with no results gets a typo fix to try ("jogrt" → jogurt)
   const typoFix = useMemo(
     () => (results.length || !q.trim() ? undefined : foodTypoFix(FOODS, q)),
@@ -105,10 +121,11 @@ export function FoodDiary({
         ? t('conflictDiet', { what: opt(`diet.${c.diet}` as 'diet.vegan').toLowerCase() })
         : t('conflictDislike', { what: c.word })
 
-  const add = (meal: Meal, slug: string) =>
+  const add = (meal: Meal, slug: string, usual?: number) =>
     start(async () => {
       const f = FOODS.find((x) => x.id === slug)!
-      const g = grams.trim() ? Number(grams.replace(',', '.')) : f.portion.grams
+      // typed grams win; then the amount used last time (recent foods); then the food's household portion
+      const g = grams.trim() ? Number(grams.replace(',', '.')) : (usual ?? f.portion.grams)
       if (!(g > 0)) return
       const k = g / 100
       const db = createClient() as unknown as Db
@@ -218,6 +235,26 @@ export function FoodDiary({
                     onChange={(e) => setGrams(e.target.value)}
                   />
                 </div>
+                {!q.trim() && recent.length > 0 && (
+                  <div className="mt-3" data-testid="diary-recent">
+                    <p className="text-subtle px-2 text-[12px] tracking-wider uppercase">{t('recent')}</p>
+                    <ul className="mt-1.5 flex flex-wrap gap-1.5 px-1">
+                      {recent.map(({ food: f, grams: usual }) => (
+                        <li key={f.id}>
+                          <button
+                            type="button"
+                            disabled={pending}
+                            onClick={() => add(meal, f.id, usual)}
+                            className="chip hover:bg-white/[0.08]"
+                            aria-label={t('recentAdd', { name: foodName(f), grams: usual })}
+                          >
+                            {foodName(f)} · {usual} g
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 {q.trim() && results.length === 0 && (
                   <p
                     className="text-subtle mt-3 px-2 text-[13.5px]"

@@ -471,6 +471,8 @@
     "searchFood": "Hledat potravinu…",
     "noFood": "Nic jsme nenašli.",
     "didYouMean": "Mysleli jste „{fix}“?",
+    "recent": "Často jíte",
+    "recentAdd": "Zapsat {name}, {grams} g",
     "empty": "Zatím nic",
     "remaining": "Zbývá",
     "over": "Nad cílem",

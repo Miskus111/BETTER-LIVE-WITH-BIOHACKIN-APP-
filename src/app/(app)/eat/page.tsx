@@ -31,7 +31,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
       .order('created_at'),
     db
       .from('food_logs')
-      .select('logged_on, kcal, protein_g')
+      .select('logged_on, meal, title, grams, kcal, protein_g')
       .gte('logged_on', dayBefore(day, 7))
       .lt('logged_on', day),
   ])
@@ -69,6 +69,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
       <FoodDiary
         rows={rows}
         day={day}
+        history={weekLogs ?? []}
         prefill={
           prefill
             ? {
