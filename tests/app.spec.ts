@@ -171,6 +171,29 @@ test('body tab: own data stays in the app, the body map opens on the website', a
   await expect(page.getByTestId('body-map-link')).toContainText('Mapa těla')
 })
 
+test.describe('abroad (browser in New York time)', () => {
+  test.use({ timezoneId: 'America/New_York' })
+
+  test("un-ticking today's dose deletes from midnight Prague time, also just after midnight", async ({
+    page,
+  }) => {
+    // 00:30 on 24 Nov in Prague is still 23 Nov in UTC; device midnight would miss or over-reach
+    await page.clock.setFixedTime(new Date('2026-11-23T23:30:00Z'))
+    const deletes: string[] = []
+    await page.route('**/rest/v1/supplement_logs**', (route) => {
+      if (route.request().method() === 'DELETE') deletes.push(decodeURIComponent(route.request().url()))
+      return route.fulfill({ status: 204, body: '' })
+    })
+    await page.goto('/preview/stack')
+    await page
+      .getByRole('button', { name: /Užito|Taken/, pressed: true })
+      .first()
+      .click()
+    await expect.poll(() => deletes.length).toBe(1)
+    expect(deletes[0]).toContain('taken_at=gte.2026-11-23T23:00:00.000Z')
+  })
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()
