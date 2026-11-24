@@ -24,6 +24,8 @@ jobs:
         run: npm run lint
       - name: Typecheck
         run: npm run typecheck
+      - name: No unused modules
+        run: npm run check:unused
       - name: Unit tests
         run: npm test
       # dates are Prague days: the same tests on the other side of the world (UTC+14) catch device-time-zone bugs
