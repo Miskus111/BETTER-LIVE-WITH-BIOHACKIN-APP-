@@ -7,6 +7,7 @@ import { ageFrom } from '@/lib/eat/targets'
 import { checkStack, medicationCategories, type Condition } from '@/lib/supplements/safety'
 import { SUPPLEMENT_BY_ID, type SupplementId } from '@/data/supplement-library'
 import { MARKER_BY_KEY } from '@/lib/labs/markers'
+import { dayBefore, pragueDay } from '@/lib/dates'
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
@@ -15,7 +16,8 @@ const days = (n: number) => {
   d.setDate(d.getDate() - n)
   return d
 }
-const iso = (d: Date) => d.toISOString().slice(0, 10)
+/** The calendar day n days before today in Prague — date columns (logged_on, night_of) hold Prague days. */
+const dayAgo = (n: number) => dayBefore(pragueDay(new Date()), n)
 
 /** Read-only tools over the signed-in user's own rows (RLS applies — the client is the user's). */
 export const COACH_TOOLS: Anthropic.Beta.BetaTool[] = [
@@ -182,7 +184,7 @@ export async function runCoachTool(
       const { data } = await db
         .from('food_logs')
         .select('logged_on, kcal, protein_g, carbs_g, fat_g, fiber_g')
-        .gte('logged_on', iso(days(n - 1)))
+        .gte('logged_on', dayAgo(n - 1))
       const totals = new Map<string, Record<string, number>>()
       for (const r of data ?? []) {
         const t = totals.get(r.logged_on) ?? { kcal: 0, protein_g: 0, carbs_g: 0, fat_g: 0, fiber_g: 0 }
@@ -279,12 +281,12 @@ export async function runCoachTool(
         db
           .from('sleep_logs')
           .select('night_of, duration_min, quality')
-          .gte('night_of', iso(days(14)))
+          .gte('night_of', dayAgo(14))
           .order('night_of', { ascending: false }),
         db
           .from('recovery_logs')
           .select('logged_on, hrv_ms, resting_hr, stress, steps')
-          .gte('logged_on', iso(days(14)))
+          .gte('logged_on', dayAgo(14))
           .order('logged_on', { ascending: false }),
       ])
       return JSON.stringify({ pain_reports: pain ?? [], sleep: sleep ?? [], recovery: rec ?? [] })
