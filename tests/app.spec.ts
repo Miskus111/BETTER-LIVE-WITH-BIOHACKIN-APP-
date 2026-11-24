@@ -163,6 +163,14 @@ test('supplement stack tells you when ticking a dose or removing fails', async (
   await expect(page.getByTestId('stack-error')).toContainText('Doplněk se nepodařilo uložit')
 })
 
+test('body tab: own data stays in the app, the body map opens on the website', async ({ page }) => {
+  await page.goto('/preview/body')
+  await expect(page.getByTestId('weight-link')).toHaveAttribute('href', '/body/weight')
+  await expect(page.getByTestId('photos-link')).toHaveAttribute('href', '/body/photos')
+  await expect(page.getByTestId('body-map-link')).toHaveAttribute('href', /^https:\/\/[^/]+\/$/)
+  await expect(page.getByTestId('body-map-link')).toContainText('Mapa těla')
+})
+
 test('mobility routine player steps through exercises', async ({ page }) => {
   await page.goto('/preview/routine')
   await page.getByTestId('routine-next').click()

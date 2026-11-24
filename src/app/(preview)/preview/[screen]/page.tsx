@@ -19,6 +19,7 @@ import { PILLARS } from '@/data/looksmaxing'
 import { CoachChat } from '@/components/coach/CoachChat'
 import { LabsClient } from '@/components/labs/LabsClient'
 import { notFound } from 'next/navigation'
+import BodyPage from '@/app/(app)/body/page'
 import { foodById } from '@/data/foods'
 import { TrainHome } from '@/components/train/TrainHome'
 import { TEMPLATES } from '@/data/exercises/templates'
@@ -171,6 +172,9 @@ export default async function Preview({
       ]
       return <PhotoJournal photos={photos} userId="00000000-0000-4000-8000-000000000000" today={today} />
     }
+    case 'body':
+      // the real page: it shows only links (own data in the app, the body map on the website)
+      return <BodyPage />
     case 'paywall':
       return <Paywall feature="photos" />
     case 'looks':

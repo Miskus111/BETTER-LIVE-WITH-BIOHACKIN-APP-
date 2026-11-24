@@ -81,6 +81,7 @@ test('accessibility: no serious or critical axe violations on app screens, login
     'coach',
     'looks',
     'progress',
+    'body',
     'weight',
     'photos',
     'paywall',
