@@ -139,6 +139,24 @@ test('accessibility: diary states that appear only after interaction', async ({ 
   await check('after a failed delete')
 })
 
+test('installable on phones: manifest icons and an iOS home-screen icon, all public PNGs', async ({
+  page,
+  request,
+}) => {
+  await page.goto('/login')
+  const apple = page.locator('link[rel="apple-touch-icon"]')
+  await expect(apple).toHaveAttribute('sizes', '180x180')
+  const manifest = await (await request.get('/manifest.webmanifest')).json()
+  for (const href of [
+    await apple.getAttribute('href'),
+    ...manifest.icons.map((i: { src: string }) => i.src),
+  ]) {
+    const res = await request.get(href!, { maxRedirects: 0 })
+    expect(res.status(), href!).toBe(200)
+    expect(res.headers()['content-type'], href!).toBe('image/png')
+  }
+})
+
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {
   const blocked: string[] = []
   page.on('console', (m) => {

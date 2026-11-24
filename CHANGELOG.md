@@ -14,6 +14,7 @@
   („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to. Potraviny synchronizované s webem (481).
 - **Rychlejší jídelníček:** stránka načte o 52 KB (gzip) méně JavaScriptu; seznam 481 potravin se stáhne až po
   zobrazení (dnešní záznamy jsou vidět hned).
+- **Ikona na ploše iPhonu:** aplikace má vlastní ikonu pro „Přidat na plochu“ (dřív zmenšený snímek stránky).
 - **Angličtina:** obchod (nadpisy, štítky, upozornění na partnerské odkazy) i všechny vlastní obrazovky aplikace; test
   hlídá, že každý použitý klíč překladu existuje.
 - **Laboratoř:** nahraný soubor musí být podle obsahu opravdu PDF nebo obrázek — přejmenovaný soubor nestojí volání AI
