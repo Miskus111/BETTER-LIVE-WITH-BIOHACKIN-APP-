@@ -26,6 +26,11 @@ jobs:
         run: npm run typecheck
       - name: Unit tests
         run: npm test
+      # dates are Prague days: the same tests on the other side of the world (UTC+14) catch device-time-zone bugs
+      - name: Unit tests in UTC+14
+        run: npm test
+        env:
+          TZ: Pacific/Kiritimati
       - name: Database migrations (throwaway Postgres)
         run: npm run test:migrations
       - name: Install Playwright browser
