@@ -148,6 +148,8 @@ const NOT_RECOMMENDED: Record<string, string> = {
   wafers: 'cukr a tuky',
   pudding: 'cukr',
   hamburger: 'sůl a nasycené tuky',
+  'pork-ribs-cooked': 'nasycené tuky',
+  'apple-strudel': 'cukr a tuk',
   pizza: 'sůl a nasycené tuky',
   'fruit-pastry': 'cukr a tuk',
   cookies: 'cukr a nasycené tuky',
