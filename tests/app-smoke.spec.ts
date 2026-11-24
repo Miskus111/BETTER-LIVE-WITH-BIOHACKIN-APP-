@@ -122,6 +122,8 @@ test('accessibility: diary states that appear only after interaction', async ({ 
     })
     expect(violations, state).toEqual([])
   }
+  // the database is answered here (never the real project): the delete fails
+  await page.route('**/rest/v1/food_logs**', (route) => route.fulfill({ status: 500, body: '{}' }))
   await page.goto('/preview/eat')
   const snack = page.getByTestId('meal-snack')
   await snack.getByRole('button', { name: /Přidat|Add/ }).click()

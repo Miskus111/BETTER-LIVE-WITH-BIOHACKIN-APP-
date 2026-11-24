@@ -118,11 +118,36 @@ test('food diary offers the foods you often eat at that meal', async ({ page }) 
 })
 
 test('food diary tells you when deleting an entry fails (no silent failure)', async ({ page }) => {
-  // the preview has no database, so the delete fails: the entry stays and an error is shown
+  // the database is answered here (never the real project): the delete fails
+  await page.route('**/rest/v1/food_logs**', (route) =>
+    route.fulfill({ status: 500, contentType: 'application/json', body: '{"message":"down"}' }),
+  )
   await page.goto('/preview/eat')
   await page.getByRole('button', { name: 'Smazat', exact: true }).first().click()
   await expect(page.getByRole('alert').filter({ hasText: 'Záznam se nepodařilo smazat' })).toBeVisible()
   await expect(page.getByTestId('diary-undo')).toHaveCount(0)
+})
+
+test('food diary: a deleted entry can be put back with the same values', async ({ page }) => {
+  // the database is answered here (never the real project)
+  const calls: { method: string; body: unknown }[] = []
+  await page.route('**/rest/v1/food_logs**', (route) => {
+    const req = route.request()
+    calls.push({ method: req.method(), body: req.postDataJSON?.() ?? null })
+    return route.fulfill({ status: req.method() === 'POST' ? 201 : 204, body: '' })
+  })
+  await page.goto('/preview/eat')
+  await page.getByRole('button', { name: 'Smazat', exact: true }).first().click()
+  const bar = page.getByTestId('diary-undo')
+  await expect(bar).toContainText('Smazáno: Ovesné vločky')
+  await bar.getByRole('button', { name: 'Vrátit' }).click()
+  await expect(bar).toHaveCount(0)
+  expect(calls.map((c) => c.method)).toEqual(['DELETE', 'POST'])
+  expect(calls[1].body).toMatchObject({
+    meal: 'breakfast',
+    title: 'Ovesné vločky|oats',
+    logged_on: '2026-11-16',
+  })
 })
 
 test('mobility routine player steps through exercises', async ({ page }) => {
