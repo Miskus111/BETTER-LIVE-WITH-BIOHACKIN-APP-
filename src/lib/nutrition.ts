@@ -150,6 +150,8 @@ const NOT_RECOMMENDED: Record<string, string> = {
   hamburger: 'sůl a nasycené tuky',
   'pork-ribs-cooked': 'nasycené tuky',
   'apple-strudel': 'cukr a tuk',
+  vanocka: 'cukr',
+  buchty: 'cukr',
   pizza: 'sůl a nasycené tuky',
   'fruit-pastry': 'cukr a tuk',
   cookies: 'cukr a nasycené tuky',
