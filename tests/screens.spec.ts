@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test'
 
 /**
- * Responsive pass: screenshots at 390 / 768 / 1440 px into test-results/screens and a check that no page
+ * Responsive pass: screenshots at 320 / 390 / 768 / 1440 px into test-results/screens and a check that no page
  * scrolls horizontally. Review the images after running `npm run test:e2e`.
  */
-const WIDTHS = [390, 768, 1440]
+const WIDTHS = [320, 390, 768, 1440]
 const PAGES = [
   ['app-train', '/preview/train'],
   ['app-library', '/preview/library'],
@@ -19,6 +19,8 @@ const PAGES = [
   ['app-weight', '/preview/weight'],
   ['app-photos', '/preview/photos'],
   ['app-paywall', '/preview/paywall'],
+  ['app-body', '/preview/body'],
+  ['app-store', '/preview/store'],
   ['login', '/login'],
   ['reset-password', '/reset-password'],
 ] as const
