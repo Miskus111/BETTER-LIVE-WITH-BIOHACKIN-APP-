@@ -5,6 +5,7 @@ describe('isPublicPath', () => {
   it('recognises website pages', () => {
     for (const p of [
       '/food/almonds',
+      '/potraviny',
       '/jak-funguje-telo/bilkoviny',
       '/doplnky#latky',
       '/terms',
@@ -13,7 +14,7 @@ describe('isPublicPath', () => {
       expect(isPublicPath(p), p).toBe(true)
   })
   it('leaves app pages alone', () => {
-    for (const p of ['/today', '/eat/explore', '/login', '/foodie', '/settings'])
+    for (const p of ['/today', '/eat', '/login', '/foodie', '/settings', '/potravinyx'])
       expect(isPublicPath(p), p).toBe(false)
   })
 })

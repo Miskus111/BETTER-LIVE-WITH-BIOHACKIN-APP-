@@ -4,7 +4,7 @@ import { webUrl } from '@/lib/web'
 
 /** Paths served by the public website (keep in sync with PUBLIC_PATHS in next.config.ts). */
 const PUBLIC =
-  /^\/(food|organ|jak-funguje-telo|doplnky|looksmaxing|science|nastroje|privacy|terms|pricing|jak-doporucujeme)(\/|#|\?|$)/
+  /^\/(food|potraviny|organ|jak-funguje-telo|doplnky|looksmaxing|science|nastroje|privacy|terms|pricing|jak-doporucujeme)(\/|#|\?|$)/
 
 export const isPublicPath = (href: string) => PUBLIC.test(href)
 

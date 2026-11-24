@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 const WEB_URL = (process.env.NEXT_PUBLIC_WEB_URL ?? 'https://better-live-web.vercel.app').replace(/\/$/, '')
 const PUBLIC_PATHS = [
   '/food/:path*',
+  '/potraviny',
   '/organ/:path*',
   '/jak-funguje-telo/:path*',
   '/doplnky/:path*',
@@ -60,7 +61,12 @@ const nextConfig: NextConfig = {
   // Public pages live on the website (separate project). Links to them from shared data and components
   // (guides, foods, organs, legal pages) are sent there, so nothing has to be rewritten in the shared code.
   async redirects() {
-    return PUBLIC_PATHS.map((source) => ({ source, destination: `${WEB_URL}${source}`, permanent: false }))
+    return [
+      ...PUBLIC_PATHS.map((source) => ({ source, destination: `${WEB_URL}${source}`, permanent: false })),
+      // the food and supplement guides are educational content: they live on the website only
+      { source: '/eat/explore', destination: `${WEB_URL}/potraviny`, permanent: false },
+      { source: '/supplements/guide', destination: `${WEB_URL}/doplnky`, permanent: false },
+    ]
   },
   // metadata (title, description, og:image) always in <head> — every link-preview bot finds it
   htmlLimitedBots: /.*/,

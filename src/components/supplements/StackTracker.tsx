@@ -250,7 +250,7 @@ export function StackTracker({ rows, medications }: { rows: StackRow[]; medicati
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="eyebrow">{t('library')}</h2>
-          <Link href="/supplements/guide" className="link text-[14px]">
+          <Link href="/doplnky" className="link text-[14px]">
             {t('guide')} →
           </Link>
         </div>

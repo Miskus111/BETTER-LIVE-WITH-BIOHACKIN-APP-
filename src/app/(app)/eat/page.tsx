@@ -61,7 +61,7 @@ export default async function EatPage({ searchParams }: { searchParams: Promise<
           </p>
           <h1 className="display mt-2 text-[44px] md:text-[56px]">{t('title')}</h1>
         </div>
-        <Link href="/eat/explore" className="btn btn-ghost">
+        <Link href="/potraviny" className="btn btn-ghost">
           {t('explore')}
         </Link>
       </div>
