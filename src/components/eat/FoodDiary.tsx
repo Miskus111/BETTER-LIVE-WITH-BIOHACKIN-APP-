@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { FOODS, foodById } from '@/data/foods'
+import type { Food } from '@/data/types'
 import { foodTypoFix, matchesText } from '@/lib/foods/query'
 import { recentFoods } from '@/lib/eat/recent'
 import { NUTRIENTS } from '@/data/nutrients'
@@ -44,6 +44,27 @@ export function mealNow(d: Date): Meal {
 }
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
+type FoodIndex = typeof import('@/data/foods')
+const NO_FOODS: Food[] = []
+
+/**
+ * The food index (all foods with their nutrients, ~56 KB gzip) loads right after the diary shows, not with the
+ * page: today's entries render from their saved names straight away, and search and the vitamin summary fill in.
+ */
+function useFoodIndex(): FoodIndex | null {
+  const [index, setIndex] = useState<FoodIndex | null>(null)
+  useEffect(() => {
+    let alive = true
+    import('@/data/foods').then((m) => {
+      if (alive) setIndex(m)
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
+  return index
+}
+
 const NO_PROFILE: DietProfile = { diet: null, allergies: [], dislikes: [] }
 const NO_HISTORY: { logged_on: string; meal: string; title: string; grams: number }[] = []
 
@@ -64,7 +85,11 @@ export function FoodDiary({
   prefill?: { name: string; meal: Meal }
 }) {
   const t = useTranslations('eat')
+  const common = useTranslations('common')
   const opt = useTranslations('onboarding.options')
+  const index = useFoodIndex()
+  const FOODS = index?.FOODS ?? NO_FOODS
+  const foodById = useCallback((id: string): Food | undefined => index?.foodById(id), [index])
   const locale = useLocale()
   const en = locale === 'en'
   // foods and nutrients have English names in the data; logged entries keep the Czech title plus the food id
@@ -95,7 +120,7 @@ export function FoodDiary({
             Number(a.f.state === 'dry') - Number(b.f.state === 'dry'),
         )
         .slice(0, 8),
-    [q, profile],
+    [q, profile, FOODS],
   )
   // the open meal's usual foods from the past week, for one-tap logging
   const recent = useMemo(
@@ -106,12 +131,12 @@ export function FoodDiary({
             grams: r.grams,
           }))
         : [],
-    [history, open],
+    [history, open, foodById],
   )
   // a search with no results gets a typo fix to try ("jogrt" → jogurt)
   const typoFix = useMemo(
-    () => (results.length || !q.trim() ? undefined : foodTypoFix(FOODS, q)),
-    [results, q],
+    () => (results.length || !q.trim() || !index ? undefined : foodTypoFix(FOODS, q)),
+    [results, q, FOODS, index],
   )
 
   const conflictText = (c: Conflict) =>
@@ -210,7 +235,7 @@ export function FoodDiary({
       .filter(([id]) => NUTRIENTS[id].ref?.kind === 'RHP')
       .map(([id, v]) => ({ id, pct: Math.round((v / (DIARY_TARGET[id] ?? NUTRIENTS[id].ref!.value)) * 100) }))
       .sort((a, b) => b.pct - a.pct)
-  }, [rows])
+  }, [rows, foodById])
 
   return (
     <div className="space-y-4">
@@ -311,7 +336,12 @@ export function FoodDiary({
                     </ul>
                   </div>
                 )}
-                {q.trim() && results.length === 0 && (
+                {q.trim() && !index && (
+                  <p className="text-subtle mt-3 px-2 text-[13.5px]" role="status">
+                    {common('loading')}
+                  </p>
+                )}
+                {q.trim() && index && results.length === 0 && (
                   <p
                     className="text-subtle mt-3 px-2 text-[13.5px]"
                     role="status"

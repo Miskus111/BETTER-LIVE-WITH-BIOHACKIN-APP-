@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { ORGAN_BY_ID } from '@/data/organs'
-import { foodsForOrgan, topFoodsFor } from './nutrition'
+import { foodsForOrgan, topFoodsFor } from './food-rankings'
 
 describe('rankings per 100 g', () => {
   it('leave out foods eaten by the pinch (spices, dried herbs)', () => {

@@ -1,4 +1,3 @@
-import { FOODS } from '@/data/foods'
 import { NUTRIENTS } from '@/data/nutrients'
 import { ORGANS } from '@/data/organs'
 import type { Food, NutrientId, Organ } from '@/data/types'
@@ -90,7 +89,8 @@ export function linkVia(food: Food, organ: Organ): NutrientId[] {
 
 export type Basis = '100g' | 'portion'
 /** amount in the chosen basis: per 100 g, or per the food's default household portion */
-const scaled = (food: Food, v: number, per: Basis) => (per === 'portion' ? (v * food.portion.grams) / 100 : v)
+export const scaled = (food: Food, v: number, per: Basis) =>
+  per === 'portion' ? (v * food.portion.grams) / 100 : v
 
 /**
  * Ranking score: how much of the organ's nutrient list a food covers, weighted by evidence and % reference.
@@ -180,27 +180,6 @@ export function onePerFood<T extends { food: Food }>(ranked: T[]): T[] {
     seen.add(key)
     return true
   })
-}
-
-export function foodsForOrgan(
-  organ: Organ,
-  k = 12,
-  per: Basis = '100g',
-): { food: Food; via: NutrientId[] }[] {
-  const ranked = FOODS.filter((food) => rankable(food, per))
-    .map((food) => ({ food, via: linkVia(food, organ) }))
-    .filter((x) => x.via.length > 0)
-    .sort((a, b) => organScore(b.food, organ, per) - organScore(a.food, organ, per))
-  return onePerFood(ranked).slice(0, k)
-}
-
-/** Best sources of a nutrient; `v` is per 100 g or per the default portion depending on `per`. */
-export function topFoodsFor(id: NutrientId, k = 5, per: Basis = '100g'): { food: Food; v: number }[] {
-  const qualitative = !!NUTRIENTS[id].qualitative
-  const ranked = FOODS.filter((f) => isSource(f, id) && rankable(f, per))
-    .map((food) => ({ food, v: scaled(food, amountOf(food, id)!, per) }))
-    .sort((a, b) => (qualitative ? 0 : b.v - a.v))
-  return onePerFood(ranked).slice(0, k)
 }
 
 export function organsForNutrient(id: NutrientId): Organ[] {
