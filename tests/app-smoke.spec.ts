@@ -109,6 +109,32 @@ test('accessibility: no serious or critical axe violations on app screens, login
   }
 })
 
+test('accessibility: diary states that appear only after interaction', async ({ page }) => {
+  const check = async (state: string) => {
+    await page.addScriptTag({ path: 'node_modules/axe-core/axe.min.js' })
+    const violations = await page.evaluate(async () => {
+      const r = await (
+        window as unknown as {
+          axe: { run: (c: unknown, o: unknown) => Promise<{ violations: { id: string; impact: string }[] }> }
+        }
+      ).axe.run(document, { resultTypes: ['violations'] })
+      return r.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)
+    })
+    expect(violations, state).toEqual([])
+  }
+  await page.goto('/preview/eat')
+  const snack = page.getByTestId('meal-snack')
+  await snack.getByRole('button', { name: /Přidat|Add/ }).click()
+  await expect(page.getByTestId('diary-recent')).toBeVisible()
+  await check('picker open with recent foods')
+  await snack.getByRole('textbox').first().fill('jogrt')
+  await expect(page.getByTestId('diary-no-food')).toBeVisible()
+  await check('no results with a typo fix')
+  await page.getByRole('button', { name: 'Smazat', exact: true }).first().click()
+  await expect(page.getByTestId('diary-no-food')).toBeVisible()
+  await check('after a failed delete')
+})
+
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {
   const blocked: string[] = []
   page.on('console', (m) => {
