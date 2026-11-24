@@ -25,6 +25,8 @@
     "backToToday": "Back to Today"
   },
   "nav": {
+    "bodyMap": "Body map",
+    "bodyMapHint": "Organs and nutrients, on the website",
     "today": "Today",
     "train": "Train",
     "eat": "Eat",

@@ -25,6 +25,8 @@
     "backToToday": "Zpět na Dnes"
   },
   "nav": {
+    "bodyMap": "Mapa těla",
+    "bodyMapHint": "Orgány a živiny na webu",
     "today": "Dnes",
     "train": "Trénink",
     "eat": "Jídlo",

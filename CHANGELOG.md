@@ -8,7 +8,7 @@
   selhalo).
 - **Doplňky:** odškrtnutí dávky a odebrání doplňku ohlásí chybu, když se nepovede (dřív tiše selhalo); „dnes“ se
   počítá podle českého času i v cizině.
-- **Průvodce potravinami a doplňky** jsou jen na webu (aplikace na ně odkazuje, staré adresy se přesměrují) —
+- **Průvodce potravinami a doplňky a interaktivní mapa těla** jsou jen na webu (aplikace na ně odkazuje, staré adresy se přesměrují) —
   aplikace drží jen to osobní, web vzdělávací obsah.
 - **Hledání potravin** snese české koncovky („jablka“, „knedlíky“), běžná slova („vajíčko“, „špagety“) a překlepy
   („jogrt“ → nabídne „jogurt“); když nic nenajde, řekne to.

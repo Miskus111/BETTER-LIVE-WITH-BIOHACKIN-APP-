@@ -1,10 +1,10 @@
 import Link from '@/components/ui/Link'
 import { getTranslations } from 'next-intl/server'
-import { ArrowRight, Camera, Scale } from 'lucide-react'
+import { ArrowRight, Camera, ExternalLink, Scale } from 'lucide-react'
 import { ProBadge } from '@/components/app/ProBadge'
-import { AnatomyExplorer } from '@/components/anatomy/AnatomyExplorer'
+import { webUrl } from '@/lib/web'
 
-/** Body tab: the interactive anatomy (muscle heat-map and InBody overlays arrive in later phases). */
+/** Body tab: the user's own body data. The interactive anatomy (organs, nutrients) is educational and lives on the website. */
 export default async function BodyPage() {
   const t = await getTranslations('nav')
   const w = await getTranslations('weight')
@@ -25,11 +25,18 @@ export default async function BodyPage() {
       hint: ph('bodyLinkHint'),
       id: 'photos-link',
     },
+    {
+      href: webUrl('/'),
+      icon: ExternalLink,
+      title: t('bodyMap'),
+      hint: t('bodyMapHint'),
+      id: 'body-map-link',
+    },
   ]
   return (
     <div className="-mx-4 md:-mx-8">
       <h1 className="sr-only">{t('body')}</h1>
-      <div className="grid gap-3 px-4 pt-1 pb-3 sm:grid-cols-2 md:px-8">
+      <div className="grid gap-3 px-4 pt-1 pb-3 sm:grid-cols-2 lg:grid-cols-3 md:px-8">
         {links.map((l) => (
           <Link
             key={l.href}
@@ -48,7 +55,6 @@ export default async function BodyPage() {
           </Link>
         ))}
       </div>
-      <AnatomyExplorer mobilePanel="inline" />
     </div>
   )
 }
