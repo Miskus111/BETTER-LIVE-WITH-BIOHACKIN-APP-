@@ -25,13 +25,24 @@ const PUBLIC_PATHS = [
  * (barcode lookup). Inline scripts stay allowed — Next's streamed payload is inline and a nonce would
  * turn every static page dynamic.
  */
+/** The configured Supabase origin, when it isn't on supabase.co (local `supabase start`, self-hosted, tests). */
+const SUPABASE_ORIGIN = (() => {
+  try {
+    const u = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '')
+    return u.hostname.endsWith('.supabase.co') ? '' : u.origin
+  } catch {
+    return ''
+  }
+})()
+const SUPABASE_WS = SUPABASE_ORIGIN.replace(/^http/, 'ws')
+
 const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://*.supabase.co",
+  `img-src 'self' data: blob: https://*.supabase.co ${SUPABASE_ORIGIN}`.trim(),
   "font-src 'self' data:",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://world.openfoodfacts.org",
+  `connect-src 'self' https://*.supabase.co wss://*.supabase.co https://world.openfoodfacts.org ${SUPABASE_ORIGIN} ${SUPABASE_WS}`.trim(),
   "worker-src 'self' blob:",
   "manifest-src 'self'",
   "form-action 'self'",

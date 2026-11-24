@@ -17,6 +17,15 @@ export default defineConfig({
   webServer: {
     // production build: what users get, and it does not collide with a running `npm run dev`
     command: `NEXT_DIST_DIR=.next-test npm run build && ENABLE_PREVIEW=1 NEXT_DIST_DIR=.next-test npx next start -p ${PORT}`,
+    // never the real project or a paid API, whatever .env.local holds: Supabase points at a closed local port
+    // (requests fail fast, so the app sees a logged-out visitor) and the secret keys are dummies.
+    // Tests that need a database reply answer it themselves with page.route.
+    env: {
+      NEXT_PUBLIC_SUPABASE_URL: 'http://127.0.0.1:54399',
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: 'e2e-anon-key-not-a-real-project',
+      SUPABASE_SERVICE_ROLE_KEY: 'e2e-disabled',
+      ANTHROPIC_API_KEY: 'e2e-disabled',
+    },
     url: `http://localhost:${PORT}`,
     reuseExistingServer: true,
     timeout: 300_000,
