@@ -3,6 +3,11 @@ import { requireAppUser } from '@/lib/auth'
 import { isAiConfigured } from '@/lib/ai/client'
 import { CoachChat, type ChatMessage, type Conversation } from '@/components/coach/CoachChat'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('coach') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function CoachPage({ searchParams }: { searchParams: Promise<{ c?: string }> }) {

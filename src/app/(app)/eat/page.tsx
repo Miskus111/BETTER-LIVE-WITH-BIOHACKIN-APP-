@@ -8,6 +8,11 @@ import { foodById } from '@/data/foods'
 import { TargetsCard } from '@/components/eat/TargetsCard'
 import { diaryWeek } from '@/lib/eat/week'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('eat') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function EatPage({ searchParams }: { searchParams: Promise<{ add?: string }> }) {

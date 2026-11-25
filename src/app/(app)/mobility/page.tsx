@@ -8,6 +8,11 @@ import { PainChart } from '@/components/mobility/PainChart'
 import { RoutineList } from '@/components/mobility/RoutineList'
 import { rankRoutines } from '@/lib/pain/routine-fit'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('mobility') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function MobilityPage() {

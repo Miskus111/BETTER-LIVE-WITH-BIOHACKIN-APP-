@@ -1,6 +1,11 @@
 import { getTranslations } from 'next-intl/server'
 import { ExerciseLibrary } from '@/components/train/ExerciseLibrary'
 
+export async function generateMetadata() {
+  const t = await getTranslations('train')
+  return { title: t('library') }
+}
+
 export default async function ExercisesPage() {
   const t = await getTranslations('train')
   return (

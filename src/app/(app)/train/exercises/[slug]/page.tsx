@@ -4,6 +4,11 @@ import { getLocale, getTranslations } from 'next-intl/server'
 import { AlertTriangle, ArrowDownRight, ArrowUpRight, CheckCircle2 } from 'lucide-react'
 import { EXERCISE_BY_SLUG, GENERIC_STEPS } from '@/data/exercises'
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const e = EXERCISE_BY_SLUG[(await params).slug]
+  return e ? { title: e.name[(await getLocale()) as 'cs' | 'en'] } : {}
+}
+
 export default async function ExercisePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const e = EXERCISE_BY_SLUG[slug]

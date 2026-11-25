@@ -1,7 +1,13 @@
+import { getTranslations } from 'next-intl/server'
 import { TrainHome } from '@/components/train/TrainHome'
 import { requireAppUser } from '@/lib/auth'
 import { TEMPLATES } from '@/data/exercises/templates'
 import { rankTemplates } from '@/lib/train/template-fit'
+
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('train') }
+}
 
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 

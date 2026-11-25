@@ -9,6 +9,11 @@ import { LanguageSwitch } from '@/components/app/LanguageSwitch'
 import { signOut } from '@/app/(auth)/actions'
 import { deleteAccount, withdrawHealthConsent } from './actions'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('settings') }
+}
+
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ delete?: string }> }) {
   const { user, profile, supabase } = await requireAppUser()
   const plan = await getPlan(supabase, user.id)

@@ -4,6 +4,11 @@ import { ArrowRight, Camera, ExternalLink, Scale } from 'lucide-react'
 import { ProBadge } from '@/components/app/ProBadge'
 import { webUrl } from '@/lib/web'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('body') }
+}
+
 /** Body tab: the user's own body data. The interactive anatomy (organs, nutrients) is educational and lives on the website. */
 export default async function BodyPage() {
   const t = await getTranslations('nav')
@@ -36,7 +41,7 @@ export default async function BodyPage() {
   return (
     <div className="-mx-4 md:-mx-8">
       <h1 className="sr-only">{t('body')}</h1>
-      <div className="grid gap-3 px-4 pt-1 pb-3 sm:grid-cols-2 lg:grid-cols-3 md:px-8">
+      <div className="grid gap-3 px-4 pt-1 pb-3 sm:grid-cols-2 md:px-8 lg:grid-cols-3">
         {links.map((l) => (
           <Link
             key={l.href}

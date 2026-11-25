@@ -3,6 +3,11 @@ import { requireAppUser } from '@/lib/auth'
 import { PILLARS } from '@/data/looksmaxing'
 import { LooksHabits } from '@/components/looks/LooksHabits'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('looks') }
+}
+
 export default async function LooksPage() {
   await requireAppUser()
   const t = await getTranslations('looks')

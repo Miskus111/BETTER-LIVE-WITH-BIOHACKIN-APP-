@@ -3,6 +3,11 @@ import { requireAppUser } from '@/lib/auth'
 import { isAiConfigured } from '@/lib/ai/client'
 import { LabsClient, type BodyComp, type LabReportRow, type LabValue } from '@/components/labs/LabsClient'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('labs') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function LabsPage() {

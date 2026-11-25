@@ -6,6 +6,11 @@ import { TOPIC_LINKS, WHERE_TO_BUY } from '@/data/retailers'
 import type { NutrientId } from '@/data/types'
 import { WhereToBuy } from '@/components/ui/WhereToBuy'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('store') }
+}
+
 /** English names of nutrients that have no row in the nutrition panel (qualitative ones). */
 const EN_ONLY_HERE: Partial<Record<NutrientId, string>> = { cultures: 'Live cultures' }
 

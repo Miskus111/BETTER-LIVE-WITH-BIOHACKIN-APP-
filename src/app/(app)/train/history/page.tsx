@@ -6,6 +6,11 @@ import { setsPerMuscle, volume, type LoggedSet } from '@/lib/train/strength'
 import { MuscleSetsChart } from '@/components/train/MuscleSetsChart'
 import { isoDaysAgo } from '@/lib/dates'
 
+export async function generateMetadata() {
+  const t = await getTranslations('train')
+  return { title: t('history') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function HistoryPage() {

@@ -385,7 +385,8 @@
     "progress": "Progres",
     "formInvalid": "Zkontrolujte prosím údaje: doba 1–1440 min (celé minuty), vzdálenost 0–1000 km, průměrný tep 30–230.",
     "forYourSport": "Pro váš sport",
-    "templateFit": "S vaším vybavením půjde {n} z {total} cviků"
+    "templateFit": "S vaším vybavením půjde {n} z {total} cviků",
+    "sessionTitle": "Probíhající trénink"
   },
   "muscles": {
     "chest": "Prsa",

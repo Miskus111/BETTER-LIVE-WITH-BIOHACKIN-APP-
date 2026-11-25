@@ -7,6 +7,11 @@ import type { SupplementId } from '@/data/supplement-library'
 import { profileSuggestions } from '@/lib/supplements/suggestions'
 import { lastSevenDays } from '@/lib/supplements/adherence'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('supplements') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export default async function SupplementsPage() {

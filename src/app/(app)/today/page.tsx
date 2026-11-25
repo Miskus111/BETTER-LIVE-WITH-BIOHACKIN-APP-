@@ -9,6 +9,11 @@ import { readingFor } from '@/lib/today/reading'
 import { todayTip } from '@/lib/today/tip'
 import { weekOverview } from '@/lib/today/week'
 
+export async function generateMetadata() {
+  const t = await getTranslations('nav')
+  return { title: t('today') }
+}
+
 type Db = { from: (t: string) => any } // eslint-disable-line @typescript-eslint/no-explicit-any
 const iso = (d: Date) => d.toISOString().slice(0, 10)
 
