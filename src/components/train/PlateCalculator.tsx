@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { useEscape, useRestoreFocus } from '@/lib/useEscape'
+import { useEscape, useRestoreFocus, useFocusTrap } from '@/lib/dialog'
 import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 import { platesPerSide } from '@/lib/train/strength'
@@ -11,6 +11,8 @@ export function PlateCalculator({ initial, onClose }: { initial: number; onClose
   const common = useTranslations('common')
   useEscape(onClose)
   useRestoreFocus()
+  const box = useRef<HTMLDivElement>(null)
+  useFocusTrap(box)
   const close = useRef<HTMLButtonElement>(null)
   // after useRestoreFocus has noted the opener (autoFocus would move focus before that)
   useEffect(() => close.current?.focus(), [])
@@ -23,6 +25,7 @@ export function PlateCalculator({ initial, onClose }: { initial: number; onClose
       onClick={onClose}
     >
       <div
+        ref={box}
         role="dialog"
         aria-modal="true"
         aria-label={t('plates')}

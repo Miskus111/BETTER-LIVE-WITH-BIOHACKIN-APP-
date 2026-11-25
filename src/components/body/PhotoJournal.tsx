@@ -9,7 +9,7 @@ import { photoPath, preparePhoto } from '@/lib/body/photo'
 import { deletePhoto, savePhoto } from '@/app/(app)/body/photos/actions'
 import { cx } from '@/lib/format'
 import { scrollBehavior } from '@/lib/motion'
-import { useEscape } from '@/lib/useEscape'
+import { useEscape, useFocusTrap } from '@/lib/dialog'
 
 export type Pose = 'front' | 'side' | 'back' | 'other'
 export interface PhotoItem {
@@ -43,6 +43,8 @@ export function PhotoJournal({
   const [picked, setPicked] = useState<string[]>([])
   const [open, setOpen] = useState<PhotoItem | null>(null)
   useEscape(() => setOpen(null), open !== null)
+  const viewer = useRef<HTMLDivElement>(null)
+  useFocusTrap(viewer, open !== null)
   // closing the viewer gives keyboard focus back to the thumbnail that opened it
   const opener = useRef<HTMLElement | null>(null)
   useEffect(() => {
@@ -313,6 +315,7 @@ export function PhotoJournal({
 
       {open && (
         <div
+          ref={viewer}
           role="dialog"
           aria-modal="true"
           aria-label={df(open.taken_at)}

@@ -199,6 +199,12 @@ test('keyboard: Escape closes the exercise picker, whose close button is labelle
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await expect(dialog.getByRole('button', { name: /Zavřít|Close/ })).toBeVisible()
+  // Tab and Shift+Tab stay inside the open dialog
+  const insideDialog = () => page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]'))
+  for (const key of ['Shift+Tab', 'Shift+Tab', 'Shift+Tab', 'Tab', 'Tab']) {
+    await page.keyboard.press(key)
+    expect(await insideDialog(), key).toBe(true)
+  }
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
   // focus is back on the button that opened it, not lost at the top of the page
@@ -212,6 +218,12 @@ test('keyboard: Escape closes an opened progress photo', async ({ page }) => {
   await page.keyboard.press('Enter')
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press('Tab')
+    expect(await page.evaluate(() => !!document.activeElement?.closest('[role="dialog"]')), `Tab ${i}`).toBe(
+      true,
+    )
+  }
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
   await expect(thumb).toBeFocused()
