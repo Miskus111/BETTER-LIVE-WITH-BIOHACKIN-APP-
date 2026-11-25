@@ -17,7 +17,7 @@
     "test:rls": "tsx --tsconfig scripts/tsconfig.json scripts/test-rls.ts",
     "seed:reference": "tsx --tsconfig scripts/tsconfig.json scripts/seed-reference.ts",
     "check:db": "tsx --tsconfig scripts/tsconfig.json scripts/check-db.ts",
-    "check": "npm run lint && npm run typecheck && npm test && npm run test:e2e",
+    "check": "npm run lint && npm run typecheck && npm run check:unused && npm test && npm run test:e2e",
     "sync:data": "tsx --tsconfig scripts/tsconfig.json scripts/sync-data.ts",
     "test:migrations": "node scripts/test-migrations.mjs",
     "check:data-sync": "tsx --tsconfig scripts/tsconfig.json scripts/check-data-sync.ts",

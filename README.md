@@ -16,11 +16,12 @@ npm run dev            # http://localhost:3000
 
 | Skript                    | Co dělá                                                                                                                         |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `npm run check`           | Vše, co spouští CI: lint, typecheck, unit testy a e2e                                                                           |
+| `npm run check`           | Vše, co spouští CI: lint, typecheck, nepoužitý kód, unit testy a e2e                                                            |
 | `npm run dev`             | Vývojový server                                                                                                                 |
 | `npm run build` / `start` | Produkční build                                                                                                                 |
 | `npm test`                | Vitest unit testy                                                                                                               |
-| `npm run test:e2e`        | Playwright: smoke testy + screenshoty 390/768/1440 (build do `.next-test`)                                                      |
+| `npm run test:e2e`        | Playwright: smoke testy + screenshoty 320/390/768/1440 (build do `.next-test`)                                                  |
+| `npm run check:unused`    | Selže, když nějaký soubor v `src/` nepoužívá žádná stránka ani skript (testy se nepočítají)                                     |
 | `npm run sync:data`       | Převezme sdílená data (potraviny, doplňky, cviky, orgány) z checkoutu webu                                                      |
 | `npm run check:data-sync` | Ověří, že sdílená data odpovídají webu na GitHubu (běží i každé pondělí v CI)                                                   |
 | `npm run check:db`        | Produkční databáze má funkce z migrací a celou knihovnu cviků (čte `.env.local`)                                                |
@@ -88,7 +89,11 @@ key the app still works: the coach shows a notice and Labs accepts pasted text o
 ## Tests
 
 GitHub Actions (`.github/workflows/ci.yml`) spouští při každém pushi na `main` a u pull requestů lint, typecheck,
-unit testy a celou e2e sadu. Při selhání se přiloží report Playwrightu.
+kontrolu nepoužitého kódu, unit testy (i v časovém pásmu UTC+14, aby se ukázaly chyby s půlnocí), migrace na dočasném
+Postgresu a celou e2e sadu. Při selhání se přiloží report Playwrightu.
+
+Testy nikdy nevolají ostrou databázi ani placené API: e2e server dostane falešné klíče a Supabase na zavřeném lokálním
+portu; testy, které potřebují odpověď databáze, si ji podvrhnou přes `page.route`.
 
 `npm test` runs unit tests. `npm run test:e2e` builds into `.next-test` and starts it with `ENABLE_PREVIEW=1`, which
 enables the test-only `/preview/<screen>` pages used to test signed-in screens without a login. Never set
