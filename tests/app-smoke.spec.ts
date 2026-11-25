@@ -194,21 +194,27 @@ test('keyboard: Escape closes the exercise picker, whose close button is labelle
   await page.reload()
   await page.getByTestId('start-workout').click()
   await expect(page).toHaveURL(/\/preview\/session/)
-  await page.getByTestId('add-exercise').click()
+  await page.getByTestId('add-exercise').focus()
+  await page.keyboard.press('Enter')
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await expect(dialog.getByRole('button', { name: /Zavřít|Close/ })).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
+  // focus is back on the button that opened it, not lost at the top of the page
+  await expect(page.getByTestId('add-exercise')).toBeFocused()
 })
 
 test('keyboard: Escape closes an opened progress photo', async ({ page }) => {
   await page.goto('/preview/photos')
-  await page.getByTestId('gallery').locator('li button').first().click()
+  const thumb = page.getByTestId('gallery').locator('li button').first()
+  await thumb.focus()
+  await page.keyboard.press('Enter')
   const dialog = page.getByRole('dialog')
   await expect(dialog).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(dialog).toHaveCount(0)
+  await expect(thumb).toBeFocused()
 })
 
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {

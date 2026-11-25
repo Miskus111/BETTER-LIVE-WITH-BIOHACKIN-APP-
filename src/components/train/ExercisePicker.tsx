@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslations, useLocale } from 'next-intl'
-import { useEscape } from '@/lib/useEscape'
+import { useEscape, useRestoreFocus } from '@/lib/useEscape'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { EXERCISES, MUSCLES, type Muscle } from '@/data/exercises'
@@ -14,6 +14,7 @@ export function ExercisePicker({ onPick, onClose }: { onPick: (slug: string) => 
   const t = useTranslations('train')
   const common = useTranslations('common')
   useEscape(onClose)
+  useRestoreFocus()
   const m = useTranslations('muscles')
   const locale = useLocale() as 'cs' | 'en'
   const [q, setQ] = useState('')

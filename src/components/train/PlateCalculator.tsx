@@ -1,8 +1,8 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import { useEscape } from '@/lib/useEscape'
-import { useState } from 'react'
+import { useEscape, useRestoreFocus } from '@/lib/useEscape'
+import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 import { platesPerSide } from '@/lib/train/strength'
 
@@ -10,6 +10,10 @@ export function PlateCalculator({ initial, onClose }: { initial: number; onClose
   const t = useTranslations('train')
   const common = useTranslations('common')
   useEscape(onClose)
+  useRestoreFocus()
+  const close = useRef<HTMLButtonElement>(null)
+  // after useRestoreFocus has noted the opener (autoFocus would move focus before that)
+  useEffect(() => close.current?.focus(), [])
   const [target, setTarget] = useState(String(initial || 60))
   const [bar, setBar] = useState(20)
   const r = platesPerSide(Number(target) || 0, bar)
@@ -31,8 +35,8 @@ export function PlateCalculator({ initial, onClose }: { initial: number; onClose
             type="button"
             onClick={onClose}
             aria-label={common('close')}
+            ref={close}
             className="text-subtle"
-            autoFocus
           >
             <X size={18} />
           </button>

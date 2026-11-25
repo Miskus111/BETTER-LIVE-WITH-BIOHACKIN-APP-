@@ -43,6 +43,14 @@ export function PhotoJournal({
   const [picked, setPicked] = useState<string[]>([])
   const [open, setOpen] = useState<PhotoItem | null>(null)
   useEscape(() => setOpen(null), open !== null)
+  // closing the viewer gives keyboard focus back to the thumbnail that opened it
+  const opener = useRef<HTMLElement | null>(null)
+  useEffect(() => {
+    if (open === null && opener.current?.isConnected) {
+      opener.current.focus()
+      opener.current = null
+    }
+  }, [open])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file])
@@ -257,7 +265,11 @@ export function PhotoJournal({
                 <li key={p.id}>
                   <button
                     type="button"
-                    onClick={() => (picking ? togglePick(p.id) : setOpen(p))}
+                    onClick={(e) => {
+                      if (picking) return togglePick(p.id)
+                      opener.current = e.currentTarget
+                      setOpen(p)
+                    }}
                     aria-pressed={picking ? sel : undefined}
                     className={cx(
                       'group border-line relative block w-full overflow-hidden rounded-2xl border text-left transition',
