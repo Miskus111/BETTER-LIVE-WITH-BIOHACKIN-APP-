@@ -9,6 +9,7 @@ import { photoPath, preparePhoto } from '@/lib/body/photo'
 import { deletePhoto, savePhoto } from '@/app/(app)/body/photos/actions'
 import { cx } from '@/lib/format'
 import { scrollBehavior } from '@/lib/motion'
+import { useEscape } from '@/lib/useEscape'
 
 export type Pose = 'front' | 'side' | 'back' | 'other'
 export interface PhotoItem {
@@ -41,6 +42,7 @@ export function PhotoJournal({
   const [picking, setPicking] = useState(false)
   const [picked, setPicked] = useState<string[]>([])
   const [open, setOpen] = useState<PhotoItem | null>(null)
+  useEscape(() => setOpen(null), open !== null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const preview = useMemo(() => (file ? URL.createObjectURL(file) : null), [file])
@@ -303,7 +305,6 @@ export function PhotoJournal({
           aria-modal="true"
           aria-label={df(open.taken_at)}
           className="bg-ink/95 fixed inset-0 z-50 flex flex-col p-4 backdrop-blur-md"
-          onKeyDown={(e) => e.key === 'Escape' && setOpen(null)}
         >
           <div className="flex items-center justify-between gap-3">
             <div>

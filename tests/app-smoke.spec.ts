@@ -202,6 +202,15 @@ test('keyboard: Escape closes the exercise picker, whose close button is labelle
   await expect(dialog).toHaveCount(0)
 })
 
+test('keyboard: Escape closes an opened progress photo', async ({ page }) => {
+  await page.goto('/preview/photos')
+  await page.getByTestId('gallery').locator('li button').first().click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+})
+
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {
   const blocked: string[] = []
   page.on('console', (m) => {
