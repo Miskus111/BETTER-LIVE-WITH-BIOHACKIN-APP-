@@ -229,6 +229,19 @@ test('keyboard: Escape closes an opened progress photo', async ({ page }) => {
   await expect(thumb).toBeFocused()
 })
 
+test('keyboard: Escape closes the mobile More panel and returns focus to its button', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 })
+  await page.goto('/preview/today')
+  const more = page.locator('button[aria-controls="app-more"]')
+  await more.focus()
+  await page.keyboard.press('Enter')
+  await expect(page.locator('#app-more')).toBeVisible()
+  await page.keyboard.press('Tab')
+  await page.keyboard.press('Escape')
+  await expect(page.locator('#app-more')).toHaveCount(0)
+  await expect(more).toBeFocused()
+})
+
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {
   const blocked: string[] = []
   page.on('console', (m) => {

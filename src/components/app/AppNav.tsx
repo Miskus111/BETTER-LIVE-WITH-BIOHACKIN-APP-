@@ -2,7 +2,8 @@
 
 import Link from '@/components/ui/Link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useEscape } from '@/lib/dialog'
 import { useTranslations } from 'next-intl'
 import { BookOpen, LogOut, Menu, X } from 'lucide-react'
 import { SECONDARY, TABS, type NavItem } from '@/lib/app-nav'
@@ -69,6 +70,12 @@ export function MobileNav() {
   const t = useTranslations('nav')
   const tc = useTranslations('common')
   const [open, setOpen] = useState(false)
+  // Escape closes the More panel and puts the keyboard back on its button
+  const moreButton = useRef<HTMLButtonElement>(null)
+  useEscape(() => {
+    setOpen(false)
+    moreButton.current?.focus()
+  }, open)
   const [menuPath, setMenuPath] = useState(path)
   if (menuPath !== path) {
     setMenuPath(path)
@@ -84,6 +91,7 @@ export function MobileNav() {
           <LanguageSwitch />
           <button
             type="button"
+            ref={moreButton}
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             aria-controls="app-more"
