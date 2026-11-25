@@ -1,11 +1,13 @@
 import Link from '@/components/ui/Link'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Check, Lock } from 'lucide-react'
 import { PRICES, type Feature } from '@/lib/billing'
 
 /** Shown instead of a Pro feature when the user is on the free plan (only when FREE_MODE is off). */
 export async function Paywall({ feature }: { feature: Feature }) {
   const t = await getTranslations('billing')
+  // numbers in the app's language ("72.4" in English, "72,4" in Czech)
+  const nl = (await getLocale()) === 'en' ? 'en' : 'cs-CZ'
   const perks = ['perk_coach', 'perk_labs', 'perk_progress', 'perk_photos'] as const
   return (
     <section className="card border-cyan/25 mx-auto max-w-xl p-6 text-center md:p-8" data-testid="paywall">
@@ -24,8 +26,8 @@ export async function Paywall({ feature }: { feature: Feature }) {
       </ul>
       <p className="mt-6 font-mono text-[15px]">
         {t('priceLine', {
-          month: new Intl.NumberFormat('cs-CZ').format(PRICES.pro_month_czk),
-          year: new Intl.NumberFormat('cs-CZ').format(PRICES.pro_year_czk),
+          month: new Intl.NumberFormat(nl).format(PRICES.pro_month_czk),
+          year: new Intl.NumberFormat(nl).format(PRICES.pro_year_czk),
         })}
       </p>
       <Link href="/pricing" className="btn btn-primary mt-4">

@@ -1,5 +1,5 @@
 import Link from '@/components/ui/Link'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { Download, KeyRound, PencilLine, ShieldOff, Sparkles, Trash2 } from 'lucide-react'
 import { isFreeMode, PRICES } from '@/lib/billing'
 import { getPlan } from '@/lib/plan'
@@ -20,6 +20,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const free = isFreeMode()
   const t = await getTranslations('settings')
   const c = await getTranslations('common')
+  // numbers in the app's language ("72.4" in English, "72,4" in Czech)
+  const nl = (await getLocale()) === 'en' ? 'en' : 'cs-CZ'
   const { delete: del } = await searchParams
   return (
     <div className="mx-auto max-w-2xl">
@@ -56,8 +58,8 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             <p className="text-[15px]">{t('planFree')}</p>
             <p className="text-muted mt-1 text-[14px]">
               {t('proPrice', {
-                month: new Intl.NumberFormat('cs-CZ').format(PRICES.pro_month_czk),
-                year: new Intl.NumberFormat('cs-CZ').format(PRICES.pro_year_czk),
+                month: new Intl.NumberFormat(nl).format(PRICES.pro_month_czk),
+                year: new Intl.NumberFormat(nl).format(PRICES.pro_year_czk),
               })}
             </p>
             <p className="text-subtle mt-3 text-[13px]">{t('paymentsSoon')}</p>

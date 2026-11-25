@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 import { HeartHandshake, ShieldCheck } from 'lucide-react'
 import type { Targets } from '@/lib/eat/targets'
 import { cx } from '@/lib/format'
@@ -19,6 +19,8 @@ export async function TargetsCard({
   week?: { days: number; kcal: number; protein: number } | null
 }) {
   const t = await getTranslations('eat')
+  // numbers in the app's language ("72.4" in English, "72,4" in Czech)
+  const nl = (await getLocale()) === 'en' ? 'en' : 'cs-CZ'
   if (result.status === 'incomplete') return <p className="card text-muted p-5">{t('missingProfile')}</p>
   if (result.status === 'support')
     return (
@@ -44,7 +46,7 @@ export async function TargetsCard({
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="eyebrow">{t('targets')}</h2>
         <span className="text-subtle font-mono text-[12.5px]">
-          {t('bmr')} {tg.bmr.toLocaleString('cs-CZ')} · {t('tdee')} {tg.tdee.toLocaleString('cs-CZ')} kcal
+          {t('bmr')} {tg.bmr.toLocaleString(nl)} · {t('tdee')} {tg.tdee.toLocaleString(nl)} kcal
         </span>
       </div>
       <ul className="mt-4 grid gap-3 sm:grid-cols-5">
@@ -57,10 +59,10 @@ export async function TargetsCard({
               <div className="flex items-baseline justify-between">
                 <span className="text-muted text-[13.5px]">{r.label}</span>
                 <span className="font-mono text-[13px]">
-                  {v.toLocaleString('cs-CZ')}
+                  {v.toLocaleString(nl)}
                   <span className="text-subtle">
                     {' '}
-                    / {r.target.toLocaleString('cs-CZ')}
+                    / {r.target.toLocaleString(nl)}
                     {r.unit && ` ${r.unit}`}
                   </span>
                 </span>
@@ -79,8 +81,8 @@ export async function TargetsCard({
         <p className="text-muted mt-4 text-[13.5px]" data-testid="eat-week">
           {t('weekAverage', {
             days: week.days,
-            kcal: week.kcal.toLocaleString('cs-CZ'),
-            kcalTarget: tg.kcal.toLocaleString('cs-CZ'),
+            kcal: week.kcal.toLocaleString(nl),
+            kcalTarget: tg.kcal.toLocaleString(nl),
             protein: week.protein,
             proteinTarget: tg.proteinG,
           })}

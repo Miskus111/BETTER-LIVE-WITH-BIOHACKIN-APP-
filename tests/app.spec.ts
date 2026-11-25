@@ -354,6 +354,8 @@ test('food diary in English shows English food and nutrient names', async ({ pag
   await expect(lunch.getByRole('textbox').first()).toHaveValue('Almonds')
   await expect(lunch.getByRole('button', { name: /Almonds/ }).first()).toBeVisible()
   await expect(page.locator('main')).not.toContainText('Ovesné vločky')
+  // numbers in English format (Czech would be "2 310")
+  await expect(page.getByTestId('eat-week')).toContainText('2,310')
 })
 
 test('supplements: each item shows the last 7 days as dots', async ({ page }) => {

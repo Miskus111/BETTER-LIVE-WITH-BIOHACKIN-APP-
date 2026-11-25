@@ -157,6 +157,8 @@ export default async function TodayPage() {
             ? t('tipTrain', { done: tipChoice.done, plan: tipChoice.plan })
             : t(tipChoice.key)
 
+  // numbers in the app's language ("72.4" in English, "72,4" in Czech)
+  const nl = (await getLocale()) === 'en' ? 'en' : 'cs-CZ'
   const cards: TodayCard[] = [
     {
       href: '/train',
@@ -201,19 +203,19 @@ export default async function TodayPage() {
       href: '#checkin',
       icon: Activity,
       label: t('steps'),
-      value: rc?.steps ? rc.steps.toLocaleString('cs-CZ') : t('empty'),
+      value: rc?.steps ? rc.steps.toLocaleString(nl) : t('empty'),
       sub: rc?.water_ml ? `${(rc.water_ml / 1000).toFixed(1)} l ${t('water').toLowerCase()}` : undefined,
     },
     {
       href: '/body/weight',
       icon: Scale,
       label: wt('todayTile'),
-      value: wLast ? `${wLast.trend.toLocaleString('cs-CZ')}` : t('empty'),
+      value: wLast ? `${wLast.trend.toLocaleString(nl)}` : t('empty'),
       unit: wLast ? 'kg' : undefined,
       sub:
         w30 !== null
           ? wt('tileWeek', {
-              v: `${w30 > 0 ? '+' : w30 < 0 ? '−' : ''}${Math.abs(w30).toLocaleString('cs-CZ')}`,
+              v: `${w30 > 0 ? '+' : w30 < 0 ? '−' : ''}${Math.abs(w30).toLocaleString(nl)}`,
             })
           : undefined,
     },
