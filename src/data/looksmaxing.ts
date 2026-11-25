@@ -10,7 +10,7 @@ import { SRC } from './sources'
 export const LM_SRC = {
   sleep: {
     title: 'Axelsson a kol. (2010) Beauty sleep: experimental study, BMJ',
-    url: 'https://www.bmj.com/content/341/bmj.c6614',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/21156746/',
   },
   sunscreen: {
     title: 'Hughes a kol. (2013) Sunscreen and prevention of skin aging, Annals of Internal Medicine',
