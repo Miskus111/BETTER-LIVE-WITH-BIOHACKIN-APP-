@@ -16,7 +16,9 @@
     "errorTitle": "Something went wrong.",
     "errorBody": "It may be a dropped connection. Your saved data is safe — please try again.",
     "retry": "Try again",
-    "backToToday": "Back to Today"
+    "backToToday": "Back to Today",
+    "skipToContent": "Skip to content",
+    "close": "Close"
   },
   "nav": {
     "bodyMap": "Body map",

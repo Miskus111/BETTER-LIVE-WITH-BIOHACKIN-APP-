@@ -3,6 +3,7 @@ import { isSupabaseConfigured } from '@/lib/supabase/env'
 import { requireAppUser } from '@/lib/auth'
 import { SetupNotice } from '@/components/app/SetupNotice'
 import { MobileNav, Sidebar } from '@/components/app/AppNav'
+import { SkipLink } from '@/components/app/SkipLink'
 
 /** Signed-in app: sidebar on desktop, top bar + bottom tabs on mobile. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -10,6 +11,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   await requireAppUser()
   return (
     <IntlProvider>
+      <SkipLink />
       <div className="lg:flex">
         <Sidebar />
         <div className="min-w-0 flex-1">

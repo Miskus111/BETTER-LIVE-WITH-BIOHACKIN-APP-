@@ -1,5 +1,6 @@
 import { IntlProvider } from '@/components/providers/IntlProvider'
 import { MobileNav, Sidebar } from '@/components/app/AppNav'
+import { SkipLink } from '@/components/app/SkipLink'
 
 /**
  * Test-only preview of signed-in screens without Supabase auth. Enabled ONLY when the server runs
@@ -8,6 +9,7 @@ import { MobileNav, Sidebar } from '@/components/app/AppNav'
 export default function PreviewLayout({ children }: { children: React.ReactNode }) {
   return (
     <IntlProvider>
+      <SkipLink />
       <div className="lg:flex">
         <Sidebar />
         <div className="min-w-0 flex-1">

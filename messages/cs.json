@@ -16,7 +16,9 @@
     "errorTitle": "Něco se nepovedlo.",
     "errorBody": "Může jít o výpadek připojení. Vaše uložená data jsou v pořádku — zkuste to prosím znovu.",
     "retry": "Zkusit znovu",
-    "backToToday": "Zpět na Dnes"
+    "backToToday": "Zpět na Dnes",
+    "skipToContent": "Přeskočit na obsah",
+    "close": "Zavřít"
   },
   "nav": {
     "bodyMap": "Mapa těla",

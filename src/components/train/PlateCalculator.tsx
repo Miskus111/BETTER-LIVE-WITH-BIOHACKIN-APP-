@@ -1,12 +1,15 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { useEscape } from '@/lib/useEscape'
 import { useState } from 'react'
 import { X } from 'lucide-react'
 import { platesPerSide } from '@/lib/train/strength'
 
 export function PlateCalculator({ initial, onClose }: { initial: number; onClose: () => void }) {
   const t = useTranslations('train')
+  const common = useTranslations('common')
+  useEscape(onClose)
   const [target, setTarget] = useState(String(initial || 60))
   const [bar, setBar] = useState(20)
   const r = platesPerSide(Number(target) || 0, bar)
@@ -24,7 +27,13 @@ export function PlateCalculator({ initial, onClose }: { initial: number; onClose
       >
         <div className="flex items-center justify-between">
           <h2 className="text-[17px] font-medium">{t('plates')}</h2>
-          <button type="button" onClick={onClose} aria-label="Close" className="text-subtle">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={common('close')}
+            className="text-subtle"
+            autoFocus
+          >
             <X size={18} />
           </button>
         </div>

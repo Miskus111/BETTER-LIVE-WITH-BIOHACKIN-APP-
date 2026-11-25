@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslations, useLocale } from 'next-intl'
+import { useEscape } from '@/lib/useEscape'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { EXERCISES, MUSCLES, type Muscle } from '@/data/exercises'
@@ -11,6 +12,8 @@ const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,
 /** Modal list for adding exercises to a workout; filter by text and muscle. */
 export function ExercisePicker({ onPick, onClose }: { onPick: (slug: string) => void; onClose: () => void }) {
   const t = useTranslations('train')
+  const common = useTranslations('common')
+  useEscape(onClose)
   const m = useTranslations('muscles')
   const locale = useLocale() as 'cs' | 'en'
   const [q, setQ] = useState('')
@@ -49,7 +52,7 @@ export function ExercisePicker({ onPick, onClose }: { onPick: (slug: string) => 
             className="h-10 flex-1 bg-transparent text-[16px] outline-none"
             data-testid="exercise-search"
           />
-          <button type="button" onClick={onClose} aria-label={t('remove')} className="text-subtle p-1">
+          <button type="button" onClick={onClose} aria-label={common('close')} className="text-subtle p-1">
             <X size={18} />
           </button>
         </div>

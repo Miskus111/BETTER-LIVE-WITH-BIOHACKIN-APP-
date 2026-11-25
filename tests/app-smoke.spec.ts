@@ -177,6 +177,31 @@ test('keyboard focus is visible on text boxes that hide their own outline', asyn
     .not.toBe(before)
 })
 
+test('keyboard: the first Tab offers a skip link past the navigation', async ({ page }) => {
+  await page.goto('/preview/today')
+  await page.keyboard.press('Tab')
+  const skip = page.getByRole('link', { name: /Přeskočit na obsah|Skip to content/ })
+  await expect(skip).toBeFocused()
+  await expect(skip).toHaveAttribute('href', '#main')
+  await expect(page.locator('main#main')).toHaveCount(1)
+})
+
+test('keyboard: Escape closes the exercise picker, whose close button is labelled "close"', async ({
+  page,
+}) => {
+  await page.goto('/preview/train')
+  await page.evaluate(() => localStorage.clear())
+  await page.reload()
+  await page.getByTestId('start-workout').click()
+  await expect(page).toHaveURL(/\/preview\/session/)
+  await page.getByTestId('add-exercise').click()
+  const dialog = page.getByRole('dialog')
+  await expect(dialog).toBeVisible()
+  await expect(dialog.getByRole('button', { name: /Zavřít|Close/ })).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(dialog).toHaveCount(0)
+})
+
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {
   const blocked: string[] = []
   page.on('console', (m) => {
