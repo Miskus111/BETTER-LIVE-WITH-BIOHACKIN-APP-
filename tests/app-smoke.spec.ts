@@ -157,6 +157,26 @@ test('installable on phones: manifest icons and an iOS home-screen icon, all pub
   }
 })
 
+test('keyboard focus is visible on text boxes that hide their own outline', async ({ page }) => {
+  // the frame around the input lights up (cyan), since the input itself draws no outline
+  const borderOf = (sel: string) =>
+    page
+      .locator(sel)
+      .first()
+      .evaluate((el) => getComputedStyle(el).borderTopColor)
+  await page.goto('/preview/library')
+  const idle = await borderOf('label.field')
+  await page.locator('label.field input').first().focus()
+  expect(await borderOf('label.field')).not.toBe(idle)
+  await page.goto('/preview/coach')
+  const form = 'form:has(textarea)'
+  const before = await page.locator(form).evaluate((el) => getComputedStyle(el).borderTopColor)
+  await page.locator('textarea').first().focus()
+  await expect
+    .poll(() => page.locator(form).evaluate((el) => getComputedStyle(el).borderTopColor))
+    .not.toBe(before)
+})
+
 test('Content-Security-Policy is sent and blocks nothing the app needs', async ({ page }) => {
   const blocked: string[] = []
   page.on('console', (m) => {

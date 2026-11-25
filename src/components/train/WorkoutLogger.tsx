@@ -116,7 +116,7 @@ export function WorkoutLogger({ home = '/train' }: { home?: string }) {
           value={a.name}
           placeholder={t('defaultName')}
           onChange={(e) => s.rename(e.target.value)}
-          className="display min-w-0 flex-1 bg-transparent text-[34px] outline-none placeholder:text-white/40"
+          className="display focus:border-cyan min-w-0 flex-1 border-b border-transparent bg-transparent text-[34px] outline-none placeholder:text-white/40"
         />
         <button type="button" onClick={finish} className="btn btn-primary" data-testid="finish-workout">
           <Check size={16} aria-hidden /> {t('finish')}

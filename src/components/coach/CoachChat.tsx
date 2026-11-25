@@ -151,7 +151,7 @@ export function CoachChat({
           </p>
         )}
         <form
-          className="border-line sticky bottom-20 mt-4 flex items-end gap-2 rounded-2xl border bg-[#0b0e12] p-2 lg:bottom-4"
+          className="border-line focus-within:border-cyan sticky bottom-20 mt-4 flex items-end gap-2 rounded-2xl border bg-[#0b0e12] p-2 transition-colors lg:bottom-4"
           onSubmit={(e) => {
             e.preventDefault()
             void send(draft)

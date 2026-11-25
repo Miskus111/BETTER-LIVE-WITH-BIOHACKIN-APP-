@@ -158,7 +158,8 @@
     font-size: 15px;
     color: var(--color-fg);
   }
-  .field:focus {
+  /* focus-within: also a label.field wrapping an input (search boxes) shows where the keyboard is */
+  .field:focus-within {
     outline: none;
     border-color: var(--color-cyan);
     box-shadow: 0 0 0 3px rgb(94 231 255 / 0.18);

@@ -39,7 +39,7 @@ export function ExercisePicker({ onPick, onClose }: { onPick: (slug: string) => 
         className="bg-ink-3 border-line flex max-h-[88svh] w-full max-w-lg flex-col rounded-t-3xl border sm:rounded-3xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="border-line flex items-center gap-2 border-b px-4 py-3">
+        <div className="border-line focus-within:border-cyan flex items-center gap-2 border-b px-4 py-3 transition-colors">
           <Search size={17} className="text-subtle" aria-hidden />
           <input
             ref={input}
