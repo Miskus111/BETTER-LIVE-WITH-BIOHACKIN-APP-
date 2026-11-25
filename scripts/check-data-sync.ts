@@ -16,6 +16,7 @@ const RAW_LIB = 'https://raw.githubusercontent.com/Miskus111/BETTER-LIVE-WEB-/ma
 /** Library files the app copies from the website unchanged (foods/query.ts differs on purpose: URL sharing). */
 const SHARED_LIB = [
   'billing.ts',
+  'dialog.ts',
   'foods/aliases.ts',
   'foods/categories.ts',
   'foods/lite.ts',
