@@ -22,7 +22,9 @@ Hodnoty Supabase najdete v Supabase → Project Settings → API (stejné jako v
 | `NEXT_PUBLIC_WEB_URL`           | adresa webu, např. `https://better-live-web.vercel.app`   | ne                 |
 | `NEXT_PUBLIC_SITE_URL`          | adresa této aplikace (doplníte po prvním nasazení, bod 4) | ne                 |
 
-Volitelné: `ANTHROPIC_MODEL`, `COACH_DAILY_MESSAGE_LIMIT`, `NEXT_PUBLIC_AFF_BRAINMARKET`, `NEXT_PUBLIC_AFF_VILGAIN`.
+Volitelné: `ANTHROPIC_MODEL`, `COACH_DAILY_MESSAGE_LIMIT`, `NEXT_PUBLIC_AFF_BRAINMARKET`, `NEXT_PUBLIC_AFF_VILGAIN`,
+`NEXT_PUBLIC_GOOGLE_AUTH` = `1` (tlačítko „Přihlásit přes Google“ — nejdřív zapněte poskytovatele Google v Supabase →
+Authentication → Providers).
 **Nikdy** nenastavujte `ENABLE_PREVIEW` — zapíná testovací obrazovky bez přihlášení.
 
 ## 3. Supabase: přesměrování po přihlášení

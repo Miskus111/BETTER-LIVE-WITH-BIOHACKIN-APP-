@@ -21,10 +21,6 @@ const serif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
-  // set GOOGLE_SITE_VERIFICATION on Vercel to verify the site in Google Search Console
-  verification: process.env.GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
-    : undefined,
   applicationName: SITE.name,
   title: { default: `${SITE.name} — ${SITE.tagline}`, template: `%s · ${SITE.short}` },
   description: SITE.description,
